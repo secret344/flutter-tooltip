@@ -7,6 +7,8 @@ import 'package:flutter/rendering.dart';
 import 'package:metooltip/tooltipBase.dart';
 import 'package:metooltip/types.dart';
 
+import 'default.dart';
+
 GlobalKey<_MeUiTooltipState> meUiTooltipKey = GlobalKey();
 
 /// If you do not understand the meaning of these parameters, please try it yourself, or see the example.
@@ -172,7 +174,7 @@ class _MeUiTooltipState extends State<MeUiTooltip>
 
     Widget result = GestureDetector(
       child: Semantics(
-        child: widget.child ?? Text(widget.message ?? "no message"),
+        child: widget.child,
         label: excludeFromSemantics ? null : widget.message,
       ),
       excludeFromSemantics: true,
@@ -229,25 +231,24 @@ class _MeUiTooltipState extends State<MeUiTooltip>
     _entry = OverlayEntry(builder: (BuildContext context) {
       return Directionality(
         textDirection: Directionality.of(context),
-        child: widget.tooltipChild ??
-            TooltipBase(
-                message: widget.message ?? "",
-                height: height,
-                padding: padding,
-                margin: margin,
-                entry: _entry!,
-                decoration: decoration,
-                textStyle: textStyle,
-                triangleColor: triangleColor,
-                // animation: CurvedAnimation(
-                //   parent: _controller,
-                //   curve: Curves.fastOutSlowIn,
-                // ),
-                target: target,
-                allOffset: verticalOffset,
-                preferOri: preferLMR,
-                targetSize: targetSize,
-                customDismiss: _hideTooltip),
+        child: _DefTooltipBase(
+            message: widget.message ?? "",
+            height: height,
+            padding: padding,
+            margin: margin,
+            entry: _entry!,
+            decoration: decoration,
+            textStyle: textStyle,
+            triangleColor: triangleColor,
+            // animation: CurvedAnimation(
+            //   parent: _controller,
+            //   curve: Curves.fastOutSlowIn,
+            // ),
+            target: target,
+            allOffset: verticalOffset,
+            preferOri: preferLMR,
+            targetSize: targetSize,
+            customDismiss: _hideTooltip),
       );
     });
     overlayState.insert(_entry!);
@@ -315,5 +316,127 @@ class _MeUiTooltipState extends State<MeUiTooltip>
       default:
         return 14.0;
     }
+  }
+}
+
+// ignore: must_be_immutable
+class _DefTooltipBase extends TooltipBase {
+  final String message;
+  final double height;
+  final EdgeInsetsGeometry? padding;
+  final EdgeInsetsGeometry? margin;
+  final Decoration? decoration;
+  final TextStyle? textStyle;
+  final Animation<double>? animation;
+  final Offset target;
+  final double allOffset;
+  final PreferOrientation preferOri;
+  final OverlayEntry entry;
+  final Size targetSize;
+  final Function customDismiss;
+  final Color? triangleColor;
+  _DefTooltipBase(
+      {Key? key,
+      required this.message,
+      required this.height,
+      this.triangleColor,
+      this.padding,
+      this.margin,
+      this.decoration,
+      this.textStyle,
+      this.animation,
+      required this.target,
+      required this.allOffset,
+      required this.preferOri,
+      required this.entry,
+      required this.targetSize,
+      required this.customDismiss})
+      : super(
+            key: key,
+            message: message,
+            height: height,
+            triangleColor: triangleColor,
+            padding: padding,
+            margin: margin,
+            decoration: decoration,
+            textStyle: textStyle,
+            target: target,
+            allOffset: allOffset,
+            preferOri: preferOri,
+            entry: entry,
+            targetSize: targetSize,
+            customDismiss: customDismiss);
+
+  @override
+  Widget getDefaultComputed({
+    required PreferOrientation preferOri,
+    required String message,
+    required double height,
+    Decoration? decoration,
+    EdgeInsetsGeometry? padding,
+    EdgeInsetsGeometry? margin,
+    TextStyle? textStyle,
+  }) =>
+      TooltipDefault(
+        message: message,
+        height: height,
+        padding: padding,
+        margin: margin,
+        decoration: decoration,
+        textStyle: textStyle,
+      );
+
+  double arrowHeight = 10;
+  @override
+  CustomPaint getTipPainter(PreferOrientation preferOri, Color? triangleColor) {
+    return CustomPaint(
+        size: Size(15.0, arrowHeight),
+        painter: _TrianglePainter(preferSite: preferOri, color: triangleColor));
+  }
+}
+
+class _TrianglePainter extends CustomPainter {
+  PreferOrientation preferSite;
+  Color? color;
+
+  _TrianglePainter({this.preferSite = PreferOrientation.bottom, this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    Path path = new Path();
+    Paint paint = new Paint();
+    paint.strokeWidth = 2.0;
+    paint.color = color ?? Color(0xFFFFA500);
+    paint.style = PaintingStyle.fill;
+    switch (preferSite) {
+      case PreferOrientation.top:
+        path.moveTo(0.0, -1.0);
+        path.lineTo(size.width / 2, -1.0);
+        path.lineTo(size.width / 4, size.height / 2);
+        break;
+      case PreferOrientation.bottom:
+        path.moveTo(size.width / 4.0, size.height / 2);
+        path.lineTo(0.0, size.height + 1);
+        path.lineTo(size.width / 2, size.height + 1);
+        break;
+      case PreferOrientation.left:
+        path.moveTo(-1, 0.0);
+        path.lineTo(size.width / 2, size.height / 2);
+        path.lineTo(-1, size.height);
+        break;
+      case PreferOrientation.right:
+        path.moveTo(size.width, 0.0);
+        path.lineTo(size.width / 2, size.height / 2);
+        path.lineTo(size.width, size.height);
+        break;
+      default:
+    }
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter customPainter) {
+    return true;
   }
 }

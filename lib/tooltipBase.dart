@@ -5,7 +5,7 @@ import 'package:metooltip/types.dart';
 
 import 'default.dart';
 
-class TooltipBase extends StatefulWidget {
+abstract class TooltipBase extends StatefulWidget {
   final String message;
   final double height;
   final EdgeInsetsGeometry? padding;
@@ -40,6 +40,22 @@ class TooltipBase extends StatefulWidget {
 
   @override
   _TooltipBaseState createState() => _TooltipBaseState();
+
+  /// 你可以根据preferOri参数返回合适的Widget
+  /// You can return the appropriate widget based on the preferOri parameter
+  @protected
+  Widget getDefaultComputed({
+    required PreferOrientation preferOri,
+    required String message,
+    required double height,
+    Decoration? decoration,
+    EdgeInsetsGeometry? padding,
+    EdgeInsetsGeometry? margin,
+    TextStyle? textStyle,
+  });
+
+  @protected
+  CustomPaint getTipPainter(PreferOrientation preferOri, Color? triangleColor);
 }
 
 class _TooltipBaseState extends State<TooltipBase> {
@@ -48,46 +64,51 @@ class _TooltipBaseState extends State<TooltipBase> {
   Widget build(BuildContext context) {
     double customVerticalOffset =
         math.max(widget.allOffset - arrowHeight, arrowHeight);
+    Widget defComputed = widget.getDefaultComputed(
+      preferOri: widget.preferOri,
+      message: widget.message,
+      height: widget.height,
+      padding: widget.padding,
+      margin: widget.margin,
+      decoration: widget.decoration,
+      textStyle: widget.textStyle,
+    );
     Widget result;
+    Widget tipPainter =
+        widget.getTipPainter(widget.preferOri, widget.triangleColor);
 
     /// CustomSingleChildLayout可以获取父组件和子组件的布局区域。并可以对子组件进行盒约束及偏移定位。一句话来说用于排布一个组件
     switch (widget.preferOri) {
       case PreferOrientation.right:
         result = Row(mainAxisSize: MainAxisSize.min, children: [
-          CustomPaint(
-            size: Size(15.0, arrowHeight),
-            painter: getTipPainter(widget.preferOri, widget.triangleColor),
-          ),
-          getDefaultComputed(),
+          tipPainter,
+          Flexible(
+            fit: FlexFit.loose,
+            child: defComputed,
+          )
         ]);
         break;
       case PreferOrientation.left:
         result = Row(mainAxisSize: MainAxisSize.min, children: [
-          getDefaultComputed(),
-          CustomPaint(
-            size: Size(15.0, arrowHeight),
-            painter: getTipPainter(widget.preferOri, widget.triangleColor),
+          Flexible(
+            fit: FlexFit.loose,
+            child: defComputed,
           ),
+          tipPainter,
         ]);
         break;
       case PreferOrientation.bottom:
         customVerticalOffset = math.max(widget.allOffset, arrowHeight);
         result = Column(mainAxisSize: MainAxisSize.min, children: [
-          CustomPaint(
-            size: Size(15.0, arrowHeight),
-            painter: getTipPainter(widget.preferOri, widget.triangleColor),
-          ),
-          getDefaultComputed(),
+          tipPainter,
+          defComputed,
         ]);
         break;
       default:
         customVerticalOffset = math.max(widget.allOffset, arrowHeight);
         result = Column(mainAxisSize: MainAxisSize.min, children: [
-          getDefaultComputed(),
-          CustomPaint(
-            size: Size(15.0, arrowHeight),
-            painter: getTipPainter(widget.preferOri, widget.triangleColor),
-          ),
+          defComputed,
+          tipPainter,
         ]);
     }
 
@@ -100,33 +121,15 @@ class _TooltipBaseState extends State<TooltipBase> {
         child: GestureDetector(
           behavior: HitTestBehavior.translucent,
           onTap: () {
-            dismiss();
+            dismiss(widget.customDismiss);
           },
           child: result,
         ));
   }
 
-  @protected
-  Widget getDefaultComputed() {
-    return TooltipDefault(
-      message: widget.message,
-      height: widget.height,
-      padding: widget.padding,
-      margin: widget.margin,
-      decoration: widget.decoration,
-      textStyle: widget.textStyle,
-    );
-  }
-
-  @protected
-  void dismiss() {
-    widget.customDismiss();
-  }
-
-  @protected
-  CustomPainter getTipPainter(
-      PreferOrientation preferOri, Color? triangleColor) {
-    return _TrianglePainter(preferSite: preferOri, color: triangleColor);
+  @mustCallSuper
+  void dismiss(Function customDismiss) {
+    customDismiss();
   }
 }
 
@@ -205,8 +208,8 @@ Offset customParallelPositionDependentBox({
       : !(fitsLeft || !fitsRight);
   double x;
   if (tooltipRight)
-    x = math.min(target.dx + levelOffset,
-        size.width - levelOffset - childSize.width - margin);
+    x = math.min(
+        target.dx + levelOffset, size.width - childSize.width - margin);
   else
     x = math.max(target.dx - levelOffset - childSize.width, margin);
 
