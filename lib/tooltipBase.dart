@@ -3,8 +3,6 @@ import 'dart:math' as math;
 
 import 'package:metooltip/types.dart';
 
-import 'default.dart';
-
 abstract class TooltipBase extends StatefulWidget {
   final String message;
   final double height;

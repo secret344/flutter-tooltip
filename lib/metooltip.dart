@@ -19,7 +19,21 @@ class MeUiTooltip extends StatefulWidget {
 
   /// 自定义提示框
   /// Custom Tip Box Widget
-  final TooltipBase? tooltipChild;
+  final TooltipBase Function(
+      {required String message,
+      required double height,
+      Color? triangleColor,
+      EdgeInsetsGeometry? padding,
+      EdgeInsetsGeometry? margin,
+      Decoration? decoration,
+      TextStyle? textStyle,
+      Animation<double>? animation,
+      required Offset target,
+      required double allOffset,
+      required PreferOrientation preferOri,
+      required OverlayEntry entry,
+      required Size targetSize,
+      required Function customDismiss})? tooltipChild;
 
   /// 提示消息
   /// Tip Message
@@ -229,27 +243,42 @@ class _MeUiTooltipState extends State<MeUiTooltip>
       ancestor: overlayState.context.findRenderObject(),
     );
     _entry = OverlayEntry(builder: (BuildContext context) {
-      return Directionality(
-        textDirection: Directionality.of(context),
-        child: _DefTooltipBase(
-            message: widget.message ?? "",
-            height: height,
-            padding: padding,
-            margin: margin,
-            entry: _entry!,
-            decoration: decoration,
-            textStyle: textStyle,
-            triangleColor: triangleColor,
-            // animation: CurvedAnimation(
-            //   parent: _controller,
-            //   curve: Curves.fastOutSlowIn,
-            // ),
-            target: target,
-            allOffset: verticalOffset,
-            preferOri: preferLMR,
-            targetSize: targetSize,
-            customDismiss: _hideTooltip),
-      );
+      return widget.tooltipChild != null
+          ? widget.tooltipChild!(
+              message: widget.message ?? "",
+              height: height,
+              padding: padding,
+              margin: margin,
+              entry: _entry!,
+              decoration: decoration,
+              textStyle: textStyle,
+              triangleColor: triangleColor,
+              target: target,
+              allOffset: verticalOffset,
+              preferOri: preferLMR,
+              targetSize: targetSize,
+              customDismiss: _hideTooltip)
+          : Directionality(
+              textDirection: Directionality.of(context),
+              child: _DefTooltipBase(
+                  message: widget.message ?? "",
+                  height: height,
+                  padding: padding,
+                  margin: margin,
+                  entry: _entry!,
+                  decoration: decoration,
+                  textStyle: textStyle,
+                  triangleColor: triangleColor,
+                  // animation: CurvedAnimation(
+                  //   parent: _controller,
+                  //   curve: Curves.fastOutSlowIn,
+                  // ),
+                  target: target,
+                  allOffset: verticalOffset,
+                  preferOri: preferLMR,
+                  targetSize: targetSize,
+                  customDismiss: _hideTooltip),
+            );
     });
     overlayState.insert(_entry!);
     SemanticsService.tooltip(widget.message ?? "");

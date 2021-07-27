@@ -93,7 +93,38 @@ class _MyHomePageState extends State<MyHomePage> {
               allOffset: 50,
               child: Text("custom left tooltip"),
               preferOri: PreferOrientation.left,
-            ),
+              tooltipChild: (
+                  {required String message,
+                  required double height,
+                  Color? triangleColor,
+                  EdgeInsetsGeometry? padding,
+                  EdgeInsetsGeometry? margin,
+                  Decoration? decoration,
+                  TextStyle? textStyle,
+                  Animation<double>? animation,
+                  required Offset target,
+                  required double allOffset,
+                  required PreferOrientation preferOri,
+                  required OverlayEntry entry,
+                  required Size targetSize,
+                  required Function customDismiss}) {
+                return CustomTooltip(
+                  message: message,
+                  height: height,
+                  preferOri: preferOri,
+                  allOffset: allOffset,
+                  triangleColor: triangleColor,
+                  padding: padding,
+                  margin: margin,
+                  decoration: decoration,
+                  textStyle: textStyle,
+                  target: target,
+                  entry: entry,
+                  targetSize: targetSize,
+                  customDismiss: customDismiss,
+                );
+              },
+            )
           ],
         ),
       ),
@@ -108,7 +139,6 @@ class CustomTooltip extends TooltipBase {
   final EdgeInsetsGeometry? margin;
   final Decoration? decoration;
   final TextStyle? textStyle;
-  final Animation<double>? animation;
   final Offset target;
   final double allOffset;
   final PreferOrientation preferOri;
@@ -125,7 +155,6 @@ class CustomTooltip extends TooltipBase {
       this.margin,
       this.decoration,
       this.textStyle,
-      this.animation,
       required this.target,
       required this.allOffset,
       required this.preferOri,
