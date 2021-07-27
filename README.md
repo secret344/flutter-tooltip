@@ -1,6 +1,6 @@
-# metooltip
+# metooltip - Learn flutter
 
-A new Flutter package project.
+Reference flutter native Tooltip to implement a configurable Tooltip.
 
 ## Getting Started
 
