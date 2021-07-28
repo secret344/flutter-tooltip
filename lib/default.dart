@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+/// Default Tip Box
 class TooltipDefault extends StatelessWidget {
   final String message;
   final EdgeInsetsGeometry? padding;

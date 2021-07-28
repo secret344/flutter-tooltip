@@ -1,8 +1,6 @@
 name: metooltip
 description: Reference flutter native Tooltip to implement a configurable Tooltip, as a project to learn flutter by myself. I will complete some business logic step by step, Ensure the stability of api.
 version: 0.0.4
-authors:
-  - https://github.com/secret344
 homepage: https://github.com/secret344/flutter-tooltip
 
 environment:
@@ -16,5 +14,3 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
-flutter:

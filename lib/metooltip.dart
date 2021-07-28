@@ -9,9 +9,18 @@ import 'package:metooltip/types.dart';
 
 import 'default.dart';
 
+/// Expose the widget key
 GlobalKey<_MeUiTooltipState> meUiTooltipKey = GlobalKey();
 
 /// If you do not understand the meaning of these parameters, please try it yourself, or see the example.
+/// Basic api
+/// Usage examples:
+/// MeUiTooltip(
+///   message: "This is a right tooltip",
+///   child: Text("right tooltip"),
+///   allOffset: 50,
+///   preferOri: PreferOrientation.right,
+/// ),
 class MeUiTooltip extends StatefulWidget {
   /// 提示框目标Widget
   /// Tip box target widget
@@ -433,6 +442,7 @@ class _DefTooltipBase extends TooltipBase {
   }
 }
 
+/// The default drawn triangle hint border
 class TrianglePainter extends CustomPainter {
   PreferOrientation preferSite;
   Color? color;

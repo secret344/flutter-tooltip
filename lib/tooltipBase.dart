@@ -163,11 +163,11 @@ class _TooltipPositionDelegate extends SingleChildLayoutDelegate {
           preferBelow: preferOri == PreferOrientation.bottom ? true : false,
         );
       default:
-        return customParallelPositionDependentBox(
+        return customHorizontalPositionDependentBox(
             size: size,
             childSize: childSize,
             target: target,
-            levelOffset: allOffset,
+            horizontalOffset: allOffset,
             preferOri: preferOri);
     }
   }
@@ -181,24 +181,19 @@ class _TooltipPositionDelegate extends SingleChildLayoutDelegate {
   }
 }
 
-Offset customParallelPositionDependentBox({
+// Get Tooltip Horizontal Offset
+Offset customHorizontalPositionDependentBox({
   required Size size, // 父组件的大小
   required Size childSize, // 子组件的大小
   required Offset target, // 目标节点中心偏移坐标
   required PreferOrientation preferOri, // 方向
-  double levelOffset = 0.0, // 自定义垂直偏移量
+  double horizontalOffset = 0.0, // 自定义水平偏移量
   double margin = 10.0, // 边距
 }) {
-  assert(size != null);
-  assert(childSize != null);
-  assert(target != null);
-  assert(levelOffset != null);
-  assert(preferOri != null);
-  assert(margin != null);
-
   final bool fitsRight =
-      target.dx + levelOffset + childSize.width <= size.width - margin;
-  final bool fitsLeft = target.dx - levelOffset - childSize.width >= margin;
+      target.dx + horizontalOffset + childSize.width <= size.width - margin;
+  final bool fitsLeft =
+      target.dx - horizontalOffset - childSize.width >= margin;
 
   final bool tooltipRight = preferOri == PreferOrientation.right
       ? fitsRight || !fitsLeft
@@ -206,9 +201,9 @@ Offset customParallelPositionDependentBox({
   double x;
   if (tooltipRight)
     x = math.min(
-        target.dx + levelOffset, size.width - childSize.width - margin);
+        target.dx + horizontalOffset, size.width - childSize.width - margin);
   else
-    x = math.max(target.dx - levelOffset - childSize.width, margin);
+    x = math.max(target.dx - horizontalOffset - childSize.width, margin);
 
   double y;
   if (size.height - margin * 2.0 < childSize.height) {
