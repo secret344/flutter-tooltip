@@ -52,8 +52,14 @@ abstract class TooltipBase extends StatefulWidget {
     TextStyle? textStyle,
   });
 
+  /// Custom tooltip edge widgets.
+  /// eg：The default triangle around the edge of the tooltip.
   @protected
-  CustomPaint getTipPainter(PreferOrientation preferOri, Color? triangleColor);
+  CustomPaint customTipPainter(PreferOrientation preferOri);
+
+  /// Click on the tooltip event
+  @protected
+  void clickTooltip(Function customDismiss);
 }
 
 class _TooltipBaseState extends State<TooltipBase> {
@@ -72,8 +78,7 @@ class _TooltipBaseState extends State<TooltipBase> {
       textStyle: widget.textStyle,
     );
     Widget result;
-    Widget tipPainter =
-        widget.getTipPainter(widget.preferOri, widget.triangleColor);
+    Widget tipPainter = widget.customTipPainter(widget.preferOri);
 
     /// CustomSingleChildLayout可以获取父组件和子组件的布局区域。并可以对子组件进行盒约束及偏移定位。一句话来说用于排布一个组件
     switch (widget.preferOri) {
@@ -119,15 +124,10 @@ class _TooltipBaseState extends State<TooltipBase> {
         child: GestureDetector(
           behavior: HitTestBehavior.translucent,
           onTap: () {
-            dismiss(widget.customDismiss);
+            widget.clickTooltip(widget.customDismiss);
           },
           child: result,
         ));
-  }
-
-  @mustCallSuper
-  void dismiss(Function customDismiss) {
-    customDismiss();
   }
 }
 
@@ -152,7 +152,6 @@ class _TooltipPositionDelegate extends SingleChildLayoutDelegate {
 
   @override
   Offset getPositionForChild(Size size, Size childSize) {
-    print(childSize);
     switch (preferOri) {
       case PreferOrientation.top:
       case PreferOrientation.bottom:
@@ -227,50 +226,4 @@ Offset customParallelPositionDependentBox({
     }
   }
   return Offset(x, y);
-}
-
-class _TrianglePainter extends CustomPainter {
-  PreferOrientation preferSite;
-  Color? color;
-
-  _TrianglePainter({this.preferSite = PreferOrientation.bottom, this.color});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    Path path = new Path();
-    Paint paint = new Paint();
-    paint.strokeWidth = 2.0;
-    paint.color = color ?? Color(0xFFFFA500);
-    paint.style = PaintingStyle.fill;
-    switch (preferSite) {
-      case PreferOrientation.top:
-        path.moveTo(0.0, -1.0);
-        path.lineTo(size.width / 2, -1.0);
-        path.lineTo(size.width / 4, size.height / 2);
-        break;
-      case PreferOrientation.bottom:
-        path.moveTo(size.width / 4.0, size.height / 2);
-        path.lineTo(0.0, size.height + 1);
-        path.lineTo(size.width / 2, size.height + 1);
-        break;
-      case PreferOrientation.left:
-        path.moveTo(-1, 0.0);
-        path.lineTo(size.width / 2, size.height / 2);
-        path.lineTo(-1, size.height);
-        break;
-      case PreferOrientation.right:
-        path.moveTo(size.width, 0.0);
-        path.lineTo(size.width / 2, size.height / 2);
-        path.lineTo(size.width, size.height);
-        break;
-      default:
-    }
-
-    canvas.drawPath(path, paint);
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter customPainter) {
-    return true;
-  }
 }

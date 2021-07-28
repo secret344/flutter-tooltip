@@ -71,6 +71,9 @@ class MeUiTooltip extends StatefulWidget {
   /// 提示框三角背景颜色
   /// Cue box triangle background color
   final Color? triangleColor;
+
+  /// Close mouse events
+  final bool openMouseEvent;
   const MeUiTooltip(
       {Key? key,
       this.child,
@@ -85,6 +88,7 @@ class MeUiTooltip extends StatefulWidget {
       this.excludeFromSemantics,
       this.decoration,
       this.textStyle,
+      this.openMouseEvent = true,
       bool? isShow})
       : super(key: key);
 
@@ -197,7 +201,7 @@ class _MeUiTooltipState extends State<MeUiTooltip>
       onTap: _showTooltip,
     );
 
-    if (_mouseIsConnected) {
+    if (_mouseIsConnected && widget.openMouseEvent) {
       result = MouseRegion(
         onEnter: (PointerEnterEvent event) => _showTooltip(),
         onExit: (PointerExitEvent event) => _hideTooltip(),
@@ -301,7 +305,7 @@ class _MeUiTooltipState extends State<MeUiTooltip>
 
   /// 鼠标事件
   _handlePointerEvent(PointerEvent event) {
-    if (_entry == null) {
+    if (_entry == null || !widget.openMouseEvent) {
       return;
     }
     if (event is PointerUpEvent || event is PointerCancelEvent) {
@@ -417,10 +421,15 @@ class _DefTooltipBase extends TooltipBase {
 
   double arrowHeight = 10;
   @override
-  CustomPaint getTipPainter(PreferOrientation preferOri, Color? triangleColor) {
+  CustomPaint customTipPainter(PreferOrientation preferOri) {
     return CustomPaint(
         size: Size(15.0, arrowHeight),
         painter: _TrianglePainter(preferSite: preferOri, color: triangleColor));
+  }
+
+  @override
+  void clickTooltip(customDismiss) {
+    customDismiss();
   }
 }
 
