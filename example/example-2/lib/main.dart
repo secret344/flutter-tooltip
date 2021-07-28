@@ -42,9 +42,9 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             MeUiTooltip(
               message:
-                  "This is a left tooltip,This is a left tooltip,This is a left tooltip,This is a left tooltip",
+                  "This is a top tooltip,This is a top tooltip,This is a top tooltip,This is a top tooltip",
               allOffset: 50,
-              child: Text("custom left tooltip"),
+              child: Text("custom top tooltip"),
               preferOri: PreferOrientation.top,
               tooltipChild: _getTooltipChild,
               triangleColor: Color.fromARGB(255, 78, 47, 31),
