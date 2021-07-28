@@ -13,11 +13,11 @@ as a project to learn flutter by myself.
 
 -   [example1](./example/example-1/)
 
-    [<img height="400" width="300" src="./screenshots/example-1-1.png"/>](./screenshots/example-1-1.png)
+    ![](https://github.com/secret344/flutter-tooltip/blob/main/screenshots/example-1-1.png)
 
 -   [example2](./example/example-2/)
 
-    [<img height="400" width="300" src="./screenshots/example-2.png"/>](./screenshots/example-2.png)
+    ![](https://github.com/secret344/flutter-tooltip/blob/main/screenshots/example-2.png)
 
 ## Getting Started
 
