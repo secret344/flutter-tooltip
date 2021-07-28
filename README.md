@@ -1,7 +1,6 @@
 # metooltip
 
-Reference flutter native Tooltip to implement a configurable Tooltip,
-as a project to learn flutter by myself.
+Reference flutter native Tooltip to implement a configurable Tooltip, as a project to learn flutter by myself. I will complete some business logic step by step, Ensure the stability of api.
 
 ## Future
 
