@@ -166,58 +166,12 @@ class CustomTooltip extends TooltipBase {
   CustomPaint customTipPainter(PreferOrientation preferOri) {
     return CustomPaint(
         size: Size(15.0, 10),
-        painter: _TrianglePainter(preferSite: preferOri, color: triangleColor));
+        painter: TrianglePainter(preferSite: preferOri, color: triangleColor));
   }
 
   @override
   void clickTooltip(customDismiss) {
     print("消失");
     customDismiss();
-  }
-}
-
-class _TrianglePainter extends CustomPainter {
-  PreferOrientation preferSite;
-  Color? color;
-
-  _TrianglePainter({this.preferSite = PreferOrientation.bottom, this.color});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    Path path = new Path();
-    Paint paint = new Paint();
-    paint.strokeWidth = 2.0;
-    paint.color = color ?? Color(0xFFFFA500);
-    paint.style = PaintingStyle.fill;
-    switch (preferSite) {
-      case PreferOrientation.top:
-        path.moveTo(0.0, -1.0);
-        path.lineTo(size.width / 2, -1.0);
-        path.lineTo(size.width / 4, size.height / 2);
-        break;
-      case PreferOrientation.bottom:
-        path.moveTo(size.width / 4.0, size.height / 2);
-        path.lineTo(0.0, size.height + 1);
-        path.lineTo(size.width / 2, size.height + 1);
-        break;
-      case PreferOrientation.left:
-        path.moveTo(-1, 0.0);
-        path.lineTo(size.width / 2, size.height / 2);
-        path.lineTo(-1, size.height);
-        break;
-      case PreferOrientation.right:
-        path.moveTo(size.width, 0.0);
-        path.lineTo(size.width / 2, size.height / 2);
-        path.lineTo(size.width, size.height);
-        break;
-      default:
-    }
-
-    canvas.drawPath(path, paint);
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter customPainter) {
-    return true;
   }
 }

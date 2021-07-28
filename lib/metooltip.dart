@@ -424,7 +424,7 @@ class _DefTooltipBase extends TooltipBase {
   CustomPaint customTipPainter(PreferOrientation preferOri) {
     return CustomPaint(
         size: Size(15.0, arrowHeight),
-        painter: _TrianglePainter(preferSite: preferOri, color: triangleColor));
+        painter: TrianglePainter(preferSite: preferOri, color: triangleColor));
   }
 
   @override
@@ -433,11 +433,11 @@ class _DefTooltipBase extends TooltipBase {
   }
 }
 
-class _TrianglePainter extends CustomPainter {
+class TrianglePainter extends CustomPainter {
   PreferOrientation preferSite;
   Color? color;
 
-  _TrianglePainter({this.preferSite = PreferOrientation.bottom, this.color});
+  TrianglePainter({this.preferSite = PreferOrientation.bottom, this.color});
 
   @override
   void paint(Canvas canvas, Size size) {
