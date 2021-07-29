@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class myTooltipDefault extends StatelessWidget {
@@ -20,28 +21,32 @@ class myTooltipDefault extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ConstrainedBox(
-        constraints: BoxConstraints(minHeight: height),
-        child: Stack(
-          fit: StackFit.loose,
-          children: [
-            Image(
-              image: AssetImage("images/images.jpg"),
-              width: 300,
-            ),
-            Container(
+      constraints: BoxConstraints(minHeight: height),
+      child: Card(
+          margin: EdgeInsets.all(0),
+          color: Colors.blue,
+          child: Stack(
+            fit: StackFit.loose,
+            children: [
+              Image(
+                image: AssetImage("images/images.jpg"),
                 width: 300,
-                padding: padding,
-                margin: margin,
-                decoration: decoration,
-                child: Center(
-                  widthFactor: 1.0,
-                  heightFactor: 1.0,
-                  child: Text(
-                    message,
-                    style: textStyle,
-                  ),
-                ))
-          ],
-        ));
+              ),
+              Container(
+                  width: 300,
+                  padding: padding,
+                  margin: margin,
+                  decoration: decoration,
+                  child: Center(
+                    widthFactor: 1.0,
+                    heightFactor: 1.0,
+                    child: Text(
+                      message,
+                      style: textStyle,
+                    ),
+                  ))
+            ],
+          )),
+    );
   }
 }

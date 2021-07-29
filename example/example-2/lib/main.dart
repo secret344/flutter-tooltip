@@ -30,21 +30,20 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
             MeTooltip(
               message:
-                  "This is a top tooltip,This is a top tooltip,This is a top tooltip,This is a top tooltip",
+                  "This is a top tooltip,This is a top tooltip,This is a top tooltip,This is a top tooltipThis is a top tooltip,This is a top tooltip,This is a top tooltip,This is a top tooltipThis is a top tooltip,This is a top tooltip,This is a top tooltip,This is a top tooltipThis is a top tooltip,This is a top tooltip,This is a top tooltip,This is a top tooltipThis is a top tooltip,This is a top tooltip,This is a top tooltip,This is a top tooltipThis is a top tooltip,This is a top tooltip,This is a top tooltip,This is a top tooltipThis is a top tooltip,This is a top tooltip,This is a top tooltip",
               allOffset: 50,
               child: Text("custom top tooltip"),
+              height: 250,
               preferOri: PreferOrientation.top,
               tooltipChild: _getTooltipChild,
               triangleColor: Color.fromARGB(255, 78, 47, 31),
+              openMouseEvent: false,
             ),
             MeTooltip(
               message:
@@ -52,6 +51,25 @@ class _MyHomePageState extends State<MyHomePage> {
               allOffset: 0,
               child: Text("custom bottom tooltip"),
               preferOri: PreferOrientation.bottom,
+              tooltipChild: _getTooltipChild,
+              triangleColor: Color.fromARGB(255, 78, 47, 31),
+            ),
+            MeTooltip(
+              message:
+                  "This is a left tooltip,This is a left tooltip,This is a left tooltip,This is a left tooltip",
+              allOffset: 0,
+              child: Text("custom left tooltip, openMouseEvent:false"),
+              preferOri: PreferOrientation.left,
+              tooltipChild: _getTooltipChild,
+              triangleColor: Color.fromARGB(255, 78, 47, 31),
+              openMouseEvent: false,
+            ),
+            MeTooltip(
+              message:
+                  "This is a right tooltip,This is a right tooltip,This is a right tooltip,This is a right tooltip",
+              allOffset: 0,
+              child: Text("custom right tooltip, openMouseEvent:false"),
+              preferOri: PreferOrientation.right,
               tooltipChild: _getTooltipChild,
               triangleColor: Color.fromARGB(255, 78, 47, 31),
               openMouseEvent: false,
