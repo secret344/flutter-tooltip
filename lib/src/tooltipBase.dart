@@ -1,7 +1,10 @@
-import 'package:flutter/widgets.dart';
 import 'dart:math' as math;
 
-import 'package:metooltip/types.dart';
+import 'package:flutter/widgets.dart';
+
+import 'defaultWidget.dart';
+import 'types.dart';
+import 'utils.dart';
 
 abstract class TooltipBase extends StatefulWidget {
   final String message;
@@ -10,7 +13,7 @@ abstract class TooltipBase extends StatefulWidget {
   final EdgeInsetsGeometry? margin;
   final Decoration? decoration;
   final TextStyle? textStyle;
-  final Animation<double>? animation;
+  final Animation<double> animation;
   final Offset target;
   final double allOffset;
   final PreferOrientation preferOri;
@@ -18,23 +21,26 @@ abstract class TooltipBase extends StatefulWidget {
   final Size targetSize;
   final Function customDismiss;
   final Color? triangleColor;
+  final bool ignorePointer;
   TooltipBase(
       {Key? key,
       required this.message,
       required this.height,
+      bool? ignorePointer,
       this.triangleColor,
       this.padding,
       this.margin,
       this.decoration,
       this.textStyle,
-      this.animation,
+      required this.animation,
       required this.target,
       required this.allOffset,
       required this.preferOri,
       required this.entry,
       required this.targetSize,
       required this.customDismiss})
-      : super(key: key);
+      : ignorePointer = ignorePointer ?? false,
+        super(key: key);
 
   @override
   _TooltipBaseState createState() => _TooltipBaseState();
@@ -54,8 +60,13 @@ abstract class TooltipBase extends StatefulWidget {
 
   /// Custom tooltip edge widgets.
   /// eg：The default triangle around the edge of the tooltip.
-  @protected
-  CustomPaint customTipPainter(PreferOrientation preferOri);
+  @mustCallSuper
+  CustomPaint customTipPainter(PreferOrientation preferOri) {
+    return CustomPaint(
+        size: Size(15.0, 10),
+        painter:
+            DefTrianglePainter(preferSite: preferOri, color: triangleColor));
+  }
 
   /// Click on the tooltip event
   @protected
@@ -115,19 +126,26 @@ class _TooltipBaseState extends State<TooltipBase> {
         ]);
     }
 
-    return CustomSingleChildLayout(
-        delegate: _TooltipPositionDelegate(
-            target: widget.target,
-            allOffset: customVerticalOffset,
-            preferOri: widget.preferOri,
-            targetSize: widget.targetSize),
-        child: GestureDetector(
-          behavior: HitTestBehavior.translucent,
-          onTap: () {
-            widget.clickTooltip(widget.customDismiss);
-          },
-          child: result,
-        ));
+    return Positioned.fill(
+        // 切断 super.hitTest
+        child: IgnorePointer(
+            ignoring: widget.ignorePointer,
+            child: CustomSingleChildLayout(
+                delegate: _TooltipPositionDelegate(
+                    target: widget.target,
+                    allOffset: customVerticalOffset,
+                    preferOri: widget.preferOri,
+                    targetSize: widget.targetSize),
+                child: GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  onTap: () {
+                    widget.clickTooltip(widget.customDismiss);
+                  },
+                  child: FadeTransition(
+                    opacity: widget.animation,
+                    child: result,
+                  ),
+                ))));
   }
 }
 
@@ -163,11 +181,11 @@ class _TooltipPositionDelegate extends SingleChildLayoutDelegate {
           preferBelow: preferOri == PreferOrientation.bottom ? true : false,
         );
       default:
-        return customParallelPositionDependentBox(
+        return customHorizontalPositionDependentBox(
             size: size,
             childSize: childSize,
             target: target,
-            levelOffset: allOffset,
+            horizontalOffset: allOffset,
             preferOri: preferOri);
     }
   }
@@ -179,51 +197,4 @@ class _TooltipPositionDelegate extends SingleChildLayoutDelegate {
         allOffset != oldDelegate.allOffset ||
         preferOri != oldDelegate.preferOri;
   }
-}
-
-Offset customParallelPositionDependentBox({
-  required Size size, // 父组件的大小
-  required Size childSize, // 子组件的大小
-  required Offset target, // 目标节点中心偏移坐标
-  required PreferOrientation preferOri, // 方向
-  double levelOffset = 0.0, // 自定义垂直偏移量
-  double margin = 10.0, // 边距
-}) {
-  assert(size != null);
-  assert(childSize != null);
-  assert(target != null);
-  assert(levelOffset != null);
-  assert(preferOri != null);
-  assert(margin != null);
-
-  final bool fitsRight =
-      target.dx + levelOffset + childSize.width <= size.width - margin;
-  final bool fitsLeft = target.dx - levelOffset - childSize.width >= margin;
-
-  final bool tooltipRight = preferOri == PreferOrientation.right
-      ? fitsRight || !fitsLeft
-      : !(fitsLeft || !fitsRight);
-  double x;
-  if (tooltipRight)
-    x = math.min(
-        target.dx + levelOffset, size.width - childSize.width - margin);
-  else
-    x = math.max(target.dx - levelOffset - childSize.width, margin);
-
-  double y;
-  if (size.height - margin * 2.0 < childSize.height) {
-    y = (size.height - childSize.height) / 2.0;
-  } else {
-    final double normalizedTargetY =
-        target.dy.clamp(margin, size.height - margin);
-    final double edge = margin + childSize.height / 2.0;
-    if (normalizedTargetY < edge) {
-      y = margin;
-    } else if (normalizedTargetY > size.height - edge) {
-      y = size.height - margin - childSize.height;
-    } else {
-      y = normalizedTargetY - childSize.height / 2.0;
-    }
-  }
-  return Offset(x, y);
 }

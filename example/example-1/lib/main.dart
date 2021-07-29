@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:metooltip/metooltip.dart';
-import 'package:metooltip/types.dart';
 
 void main() {
   runApp(MyApp());
@@ -38,48 +37,48 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            MeUiTooltip(
+            MeTooltip(
               message: "This is a top tooltip",
               child: Text("Top tooltip"),
               preferOri: PreferOrientation.top,
             ),
-            MeUiTooltip(
+            MeTooltip(
               message: "This is a right tooltip",
               child: Text("right tooltip"),
               allOffset: 50,
               preferOri: PreferOrientation.right,
             ),
-            MeUiTooltip(
+            MeTooltip(
               message: "This is a bottom tooltip",
               child: Text("bottom tooltip"),
               preferOri: PreferOrientation.bottom,
             ),
-            MeUiTooltip(
+            MeTooltip(
               message: "This is a left tooltip",
               child: Text("left tooltip"),
               allOffset: 50,
               preferOri: PreferOrientation.left,
             ),
-            MeUiTooltip(
+            MeTooltip(
               message:
                   "This is a top tooltip,This is a top tooltip,This is a top tooltip,This is a top tooltip",
               child: Text("Top tooltip"),
               preferOri: PreferOrientation.top,
             ),
-            MeUiTooltip(
+            MeTooltip(
               message:
                   "This is a right tooltip,This is a right tooltip,This is a right tooltip,This is a right tooltip",
               allOffset: 50,
               child: Text("right tooltip"),
               preferOri: PreferOrientation.right,
             ),
-            MeUiTooltip(
+            MeTooltip(
               message:
                   "This is a bottom tooltip,This is a bottom tooltip,This is a bottom tooltip,This is a bottom tooltip",
               child: Text("bottom tooltip"),
               preferOri: PreferOrientation.bottom,
             ),
-            MeUiTooltip(
+            MeTooltip(
               message:
                   "This is a left tooltip,This is a left tooltip,This is a left tooltip,This is a left tooltip",
               allOffset: 50,

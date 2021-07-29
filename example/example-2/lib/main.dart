@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:metooltip/metooltip.dart';
-import 'package:metooltip/tooltipBase.dart';
-import 'package:metooltip/types.dart';
-
 import 'tooltipDefault.dart';
 
 void main() {
@@ -33,28 +30,46 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            MeUiTooltip(
+            MeTooltip(
               message:
-                  "This is a top tooltip,This is a top tooltip,This is a top tooltip,This is a top tooltip",
+                  "This is a top tooltip,This is a top tooltip,This is a top tooltip,This is a top tooltipThis is a top tooltip,This is a top tooltip,This is a top tooltip,This is a top tooltipThis is a top tooltip,This is a top tooltip,This is a top tooltip,This is a top tooltipThis is a top tooltip,This is a top tooltip,This is a top tooltip,This is a top tooltipThis is a top tooltip,This is a top tooltip,This is a top tooltip,This is a top tooltipThis is a top tooltip,This is a top tooltip,This is a top tooltip,This is a top tooltipThis is a top tooltip,This is a top tooltip,This is a top tooltip",
               allOffset: 50,
               child: Text("custom top tooltip"),
+              height: 250,
               preferOri: PreferOrientation.top,
               tooltipChild: _getTooltipChild,
               triangleColor: Color.fromARGB(255, 78, 47, 31),
+              openMouseEvent: false,
             ),
-            MeUiTooltip(
+            MeTooltip(
               message:
                   "This is a bottom tooltip,This is a bottom tooltip,This is a bottom tooltip,This is a bottom tooltip",
               allOffset: 0,
               child: Text("custom bottom tooltip"),
               preferOri: PreferOrientation.bottom,
+              tooltipChild: _getTooltipChild,
+              triangleColor: Color.fromARGB(255, 78, 47, 31),
+            ),
+            MeTooltip(
+              message:
+                  "This is a left tooltip,This is a left tooltip,This is a left tooltip,This is a left tooltip",
+              allOffset: 0,
+              child: Text("custom left tooltip, openMouseEvent:false"),
+              preferOri: PreferOrientation.left,
+              tooltipChild: _getTooltipChild,
+              triangleColor: Color.fromARGB(255, 78, 47, 31),
+              openMouseEvent: false,
+            ),
+            MeTooltip(
+              message:
+                  "This is a right tooltip,This is a right tooltip,This is a right tooltip,This is a right tooltip",
+              allOffset: 0,
+              child: Text("custom right tooltip, openMouseEvent:false"),
+              preferOri: PreferOrientation.right,
               tooltipChild: _getTooltipChild,
               triangleColor: Color.fromARGB(255, 78, 47, 31),
               openMouseEvent: false,
@@ -65,35 +80,22 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  TooltipBase _getTooltipChild(
-      {required String message,
-      required double height,
-      Color? triangleColor,
-      EdgeInsetsGeometry? padding,
-      EdgeInsetsGeometry? margin,
-      Decoration? decoration,
-      TextStyle? textStyle,
-      Animation<double>? animation,
-      required Offset target,
-      required double allOffset,
-      required PreferOrientation preferOri,
-      required OverlayEntry entry,
-      required Size targetSize,
-      required Function customDismiss}) {
+  TooltipBase _getTooltipChild(DefTooltipType p) {
     return CustomTooltip(
-      message: message,
-      height: height,
-      preferOri: preferOri,
-      allOffset: allOffset,
-      triangleColor: triangleColor,
-      padding: padding,
-      margin: margin,
-      decoration: decoration,
-      textStyle: textStyle,
-      target: target,
-      entry: entry,
-      targetSize: targetSize,
-      customDismiss: customDismiss,
+      message: p.message,
+      height: p.height,
+      preferOri: p.preferOri,
+      allOffset: p.allOffset,
+      triangleColor: p.triangleColor,
+      padding: p.padding,
+      margin: p.margin,
+      decoration: p.decoration,
+      animation: p.animation,
+      textStyle: p.textStyle,
+      target: p.target,
+      entry: p.entry,
+      targetSize: p.targetSize,
+      customDismiss: p.customDismiss,
     );
   }
 }
@@ -121,6 +123,7 @@ class CustomTooltip extends TooltipBase {
       this.margin,
       this.decoration,
       this.textStyle,
+      required Animation<double> animation,
       required this.target,
       required this.allOffset,
       required this.preferOri,
@@ -135,6 +138,7 @@ class CustomTooltip extends TooltipBase {
             padding: padding,
             margin: margin,
             decoration: decoration,
+            animation: animation,
             textStyle: textStyle,
             target: target,
             allOffset: allOffset,
@@ -163,10 +167,12 @@ class CustomTooltip extends TooltipBase {
       );
 
   @override
+  // ignore: must_call_super
   CustomPaint customTipPainter(PreferOrientation preferOri) {
     return CustomPaint(
         size: Size(15.0, 10),
-        painter: TrianglePainter(preferSite: preferOri, color: triangleColor));
+        painter:
+            DefTrianglePainter(preferSite: preferOri, color: triangleColor));
   }
 
   @override
