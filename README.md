@@ -8,6 +8,7 @@ According to the case, you can customize the appearance of the tip box. Custom a
 
 -   [ ] Animation Configuration
 -   [ ] Optimize configuration items
+-   [ ] Add Test
 
 ## Example
 
