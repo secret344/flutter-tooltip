@@ -10,7 +10,7 @@ abstract class TooltipBase extends StatefulWidget {
   final EdgeInsetsGeometry? margin;
   final Decoration? decoration;
   final TextStyle? textStyle;
-  final Animation<double>? animation;
+  final Animation<double> animation;
   final Offset target;
   final double allOffset;
   final PreferOrientation preferOri;
@@ -18,23 +18,26 @@ abstract class TooltipBase extends StatefulWidget {
   final Size targetSize;
   final Function customDismiss;
   final Color? triangleColor;
+  final bool ignorePointer;
   TooltipBase(
       {Key? key,
       required this.message,
       required this.height,
+      bool? ignorePointer,
       this.triangleColor,
       this.padding,
       this.margin,
       this.decoration,
       this.textStyle,
-      this.animation,
+      required this.animation,
       required this.target,
       required this.allOffset,
       required this.preferOri,
       required this.entry,
       required this.targetSize,
       required this.customDismiss})
-      : super(key: key);
+      : ignorePointer = ignorePointer ?? false,
+        super(key: key);
 
   @override
   _TooltipBaseState createState() => _TooltipBaseState();
@@ -115,19 +118,26 @@ class _TooltipBaseState extends State<TooltipBase> {
         ]);
     }
 
-    return CustomSingleChildLayout(
-        delegate: _TooltipPositionDelegate(
-            target: widget.target,
-            allOffset: customVerticalOffset,
-            preferOri: widget.preferOri,
-            targetSize: widget.targetSize),
-        child: GestureDetector(
-          behavior: HitTestBehavior.translucent,
-          onTap: () {
-            widget.clickTooltip(widget.customDismiss);
-          },
-          child: result,
-        ));
+    return Positioned.fill(
+        // 切断 super.hitTest
+        child: IgnorePointer(
+            ignoring: widget.ignorePointer,
+            child: CustomSingleChildLayout(
+                delegate: _TooltipPositionDelegate(
+                    target: widget.target,
+                    allOffset: customVerticalOffset,
+                    preferOri: widget.preferOri,
+                    targetSize: widget.targetSize),
+                child: GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  onTap: () {
+                    widget.clickTooltip(widget.customDismiss);
+                  },
+                  child: FadeTransition(
+                    opacity: widget.animation,
+                    child: result,
+                  ),
+                ))));
   }
 }
 

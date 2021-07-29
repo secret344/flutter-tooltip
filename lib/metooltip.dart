@@ -1,5 +1,7 @@
 library metooltip;
 
+import 'dart:async';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -36,7 +38,7 @@ class MeUiTooltip extends StatefulWidget {
       EdgeInsetsGeometry? margin,
       Decoration? decoration,
       TextStyle? textStyle,
-      Animation<double>? animation,
+      required Animation<double> animation,
       required Offset target,
       required double allOffset,
       required PreferOrientation preferOri,
@@ -83,11 +85,21 @@ class MeUiTooltip extends StatefulWidget {
 
   /// Close mouse events
   final bool openMouseEvent;
+
+  /// 等待时间
+  final Duration? waitDuration;
+
+  /// 显示时间
+  final Duration? showDuration;
+
+  /// 阻止提示框指针hitTest
+  final bool? ignorePointer;
   const MeUiTooltip(
       {Key? key,
       this.child,
       this.tooltipChild,
       this.triangleColor,
+      this.ignorePointer,
       this.message,
       this.allOffset,
       this.preferOri,
@@ -98,6 +110,8 @@ class MeUiTooltip extends StatefulWidget {
       this.decoration,
       this.textStyle,
       this.openMouseEvent = true,
+      this.showDuration,
+      this.waitDuration,
       bool? isShow})
       : super(key: key);
 
@@ -109,6 +123,10 @@ class _MeUiTooltipState extends State<MeUiTooltip>
     with SingleTickerProviderStateMixin {
   static const double _defaultVerticalOffset = 24.0;
   static const EdgeInsetsGeometry _defaultMargin = EdgeInsets.zero;
+  static const Duration _fadeInDuration = Duration(milliseconds: 150);
+  static const Duration _fadeOutDuration = Duration(milliseconds: 75);
+  static const Duration _defaultShowDuration = Duration(milliseconds: 1500);
+  static const Duration _defaultWaitDuration = Duration.zero;
 
   late double height;
   late EdgeInsetsGeometry padding;
@@ -120,18 +138,25 @@ class _MeUiTooltipState extends State<MeUiTooltip>
   late bool excludeFromSemantics;
   late bool _mouseIsConnected;
   OverlayEntry? _entry;
+  Timer? _hideTimer; // 长按时小时延续时间
+  Timer? _showTimer; // 动画时间
+  late Duration showDuration;
+  late Duration waitDuration;
   late AnimationController _controller;
   late Color triangleColor;
+  bool _longPressActivated = false;
   @override
   void initState() {
     super.initState();
     _mouseIsConnected = RendererBinding.instance!.mouseTracker.mouseIsConnected;
-    //  _controller = AnimationController(
-    //                 duration: _fadeInDuration,
-    //                 reverseDuration: _fadeOutDuration,
-    //                 vsync: this,
-    //               )
-    //   ..addStatusListener(_handleStatusChanged);
+    // 默认动画
+    _controller = AnimationController(
+      duration: _fadeInDuration, // 动画持续时间
+      reverseDuration: _fadeOutDuration, // 反向动画持续时间
+      vsync: this, // 帧触发时收到通  ticker
+    )
+      // 监听动画状态改变
+      ..addStatusListener(_handleStatusChanged);
 
     /**
      * RendererBinding 是渲染树和Flutter引擎的胶水层
@@ -145,17 +170,22 @@ class _MeUiTooltipState extends State<MeUiTooltip>
   }
 
   @override
+  void deactivate() {
+    if (_entry != null) {
+      _hideTooltip(immediately: true);
+    }
+    _showTimer?.cancel();
+    super.deactivate();
+  }
+
+  @override
   void dispose() {
     GestureBinding.instance!.pointerRouter
         .removeGlobalRoute(_handlePointerEvent);
     RendererBinding.instance!.mouseTracker
         .removeListener(_handleMouseTrackerChange);
-    if (_entry != null) {
-      _entry?.remove();
-      _entry = null;
-    }
-    ;
-    // _controller.dispose();
+    if (_entry != null) _removeEntry();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -198,7 +228,8 @@ class _MeUiTooltipState extends State<MeUiTooltip>
     decoration = widget.decoration ?? defaultDecoration;
     textStyle = widget.textStyle ?? defaultTextStyle;
     triangleColor = widget.triangleColor ?? defaultTriangleColor;
-
+    waitDuration = widget.waitDuration ?? _defaultWaitDuration;
+    showDuration = widget.showDuration ?? _defaultShowDuration;
     Widget result = GestureDetector(
       child: Semantics(
         child: widget.child,
@@ -206,7 +237,7 @@ class _MeUiTooltipState extends State<MeUiTooltip>
       ),
       excludeFromSemantics: true,
       behavior: HitTestBehavior.opaque,
-      onLongPress: _showTooltip,
+      onLongPress: _handleLongPress,
       onTap: _showTooltip,
     );
 
@@ -221,24 +252,60 @@ class _MeUiTooltipState extends State<MeUiTooltip>
     return result;
   }
 
-  void _showTooltip() {
-    ensureTooltipVisible();
+  /// 长按事件
+  void _handleLongPress() {
+    _longPressActivated = true;
+    final bool tooltipCreated = _showTooltip(immediately: true)!;
+    if (tooltipCreated) Feedback.forLongPress(context);
   }
 
-  void _hideTooltip() {
-    if (_entry == null) {
-      return;
-    } else {
-      _entry!.remove();
-      _entry = null;
+  bool? _showTooltip({bool immediately = false}) {
+    // 清空长按_hideTimer上次的动画
+    _hideTimer?.cancel();
+    _hideTimer = null;
+    if (immediately) {
+      // 立即执行 需要清除之前的启动动画
+      _showTimer?.cancel();
+      _showTimer = null;
+      return _ensureTooltipVisible();
     }
+    // 延迟显示
+    _showTimer = Timer(waitDuration, _ensureTooltipVisible);
   }
 
-  bool ensureTooltipVisible() {
+  void _hideTooltip({bool immediately = false}) {
+    if (immediately) {
+      return _removeEntry();
+    }
+    // 清空_showTimer的动画 既然要隐藏就彻底清除
+    _showTimer?.cancel();
+    _showTimer = null;
+    if (_longPressActivated) {
+      _hideTimer = Timer(showDuration, _controller.reverse);
+    } else {
+      _controller.reverse();
+    }
+    _longPressActivated = false;
+  }
+
+  /// 清除Tooltip实体 包括动画
+  void _removeEntry() {
+    _hideTimer?.cancel();
+    _hideTimer = null;
+    _showTimer?.cancel();
+    _showTimer = null;
+    _entry?.remove();
+    _entry = null;
+  }
+
+  bool _ensureTooltipVisible() {
     if (_entry != null) {
+      // 如果已经存在 立即显示
+      _controller.forward();
       return false;
     }
     _createNewEntry();
+    _controller.forward();
     return true;
   }
 
@@ -266,6 +333,10 @@ class _MeUiTooltipState extends State<MeUiTooltip>
               decoration: decoration,
               textStyle: textStyle,
               triangleColor: triangleColor,
+              animation: CurvedAnimation(
+                parent: _controller,
+                curve: Curves.fastOutSlowIn,
+              ),
               target: target,
               allOffset: verticalOffset,
               preferOri: preferLMR,
@@ -282,10 +353,11 @@ class _MeUiTooltipState extends State<MeUiTooltip>
                   decoration: decoration,
                   textStyle: textStyle,
                   triangleColor: triangleColor,
-                  // animation: CurvedAnimation(
-                  //   parent: _controller,
-                  //   curve: Curves.fastOutSlowIn,
-                  // ),
+                  ignorePointer: widget.ignorePointer,
+                  animation: CurvedAnimation(
+                    parent: _controller,
+                    curve: Curves.fastOutSlowIn,
+                  ),
                   target: target,
                   allOffset: verticalOffset,
                   preferOri: preferLMR,
@@ -321,6 +393,13 @@ class _MeUiTooltipState extends State<MeUiTooltip>
       _hideTooltip();
     } else if (event is PointerDownEvent) {
       _hideTooltip();
+    }
+  }
+
+  _handleStatusChanged(AnimationStatus state) {
+    if (state == AnimationStatus.dismissed) {
+      // 动画结束删除实体 长按持久显示的清理
+      _hideTooltip(immediately: true);
     }
   }
 
@@ -369,7 +448,7 @@ class _DefTooltipBase extends TooltipBase {
   final EdgeInsetsGeometry? margin;
   final Decoration? decoration;
   final TextStyle? textStyle;
-  final Animation<double>? animation;
+  final Animation<double> animation;
   final Offset target;
   final double allOffset;
   final PreferOrientation preferOri;
@@ -377,23 +456,26 @@ class _DefTooltipBase extends TooltipBase {
   final Size targetSize;
   final Function customDismiss;
   final Color? triangleColor;
+  final bool ignorePointer;
   _DefTooltipBase(
       {Key? key,
       required this.message,
       required this.height,
       this.triangleColor,
       this.padding,
+      bool? ignorePointer,
       this.margin,
       this.decoration,
       this.textStyle,
-      this.animation,
+      required this.animation,
       required this.target,
       required this.allOffset,
       required this.preferOri,
       required this.entry,
       required this.targetSize,
       required this.customDismiss})
-      : super(
+      : ignorePointer = ignorePointer ?? false,
+        super(
             key: key,
             message: message,
             height: height,
@@ -403,10 +485,12 @@ class _DefTooltipBase extends TooltipBase {
             decoration: decoration,
             textStyle: textStyle,
             target: target,
+            ignorePointer: ignorePointer,
             allOffset: allOffset,
             preferOri: preferOri,
             entry: entry,
             targetSize: targetSize,
+            animation: animation,
             customDismiss: customDismiss);
 
   @override
