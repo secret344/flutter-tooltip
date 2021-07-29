@@ -1,3 +1,8 @@
+## 0.0.5
+
+-   Added animation effects consistent with the official Tooltip
+-   Modified the original structure
+
 ## 0.0.4
 
 -   Modify the display of the sample image error.

@@ -2,13 +2,23 @@
 
 Reference flutter native Tooltip to implement a configurable Tooltip, as a project to learn flutter by myself. I will complete some business logic step by step, Ensure the stability of api.
 
+According to the case, you can customize the appearance of the tip box. Custom animations will be supported in the future.
+
 ## Future
 
 -   [ ] Animation Configuration
-
 -   [ ] Optimize configuration items
 
 ## Example
+
+```dart
+MeTooltip(
+    message:
+        "This is a bottom tooltip,This is a bottom tooltip,This is a bottom tooltip,This is a bottom tooltip",
+    child: Text("bottom tooltip"),
+    preferOri: PreferOrientation.bottom,
+),
+```
 
 -   [example1](./example/example-1/)
 

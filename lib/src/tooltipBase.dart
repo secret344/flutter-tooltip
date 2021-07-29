@@ -1,7 +1,10 @@
-import 'package:flutter/widgets.dart';
 import 'dart:math' as math;
 
-import 'package:metooltip/types.dart';
+import 'package:flutter/widgets.dart';
+
+import 'defaultWidget.dart';
+import 'types.dart';
+import 'utils.dart';
 
 abstract class TooltipBase extends StatefulWidget {
   final String message;
@@ -57,8 +60,13 @@ abstract class TooltipBase extends StatefulWidget {
 
   /// Custom tooltip edge widgets.
   /// eg：The default triangle around the edge of the tooltip.
-  @protected
-  CustomPaint customTipPainter(PreferOrientation preferOri);
+  @mustCallSuper
+  CustomPaint customTipPainter(PreferOrientation preferOri) {
+    return CustomPaint(
+        size: Size(15.0, 10),
+        painter:
+            DefTrianglePainter(preferSite: preferOri, color: triangleColor));
+  }
 
   /// Click on the tooltip event
   @protected
@@ -189,46 +197,4 @@ class _TooltipPositionDelegate extends SingleChildLayoutDelegate {
         allOffset != oldDelegate.allOffset ||
         preferOri != oldDelegate.preferOri;
   }
-}
-
-// Get Tooltip Horizontal Offset
-Offset customHorizontalPositionDependentBox({
-  required Size size, // 父组件的大小
-  required Size childSize, // 子组件的大小
-  required Offset target, // 目标节点中心偏移坐标
-  required PreferOrientation preferOri, // 方向
-  double horizontalOffset = 0.0, // 自定义水平偏移量
-  double margin = 10.0, // 边距
-}) {
-  final bool fitsRight =
-      target.dx + horizontalOffset + childSize.width <= size.width - margin;
-  final bool fitsLeft =
-      target.dx - horizontalOffset - childSize.width >= margin;
-
-  final bool tooltipRight = preferOri == PreferOrientation.right
-      ? fitsRight || !fitsLeft
-      : !(fitsLeft || !fitsRight);
-  double x;
-  if (tooltipRight)
-    x = math.min(
-        target.dx + horizontalOffset, size.width - childSize.width - margin);
-  else
-    x = math.max(target.dx - horizontalOffset - childSize.width, margin);
-
-  double y;
-  if (size.height - margin * 2.0 < childSize.height) {
-    y = (size.height - childSize.height) / 2.0;
-  } else {
-    final double normalizedTargetY =
-        target.dy.clamp(margin, size.height - margin);
-    final double edge = margin + childSize.height / 2.0;
-    if (normalizedTargetY < edge) {
-      y = margin;
-    } else if (normalizedTargetY > size.height - edge) {
-      y = size.height - margin - childSize.height;
-    } else {
-      y = normalizedTargetY - childSize.height / 2.0;
-    }
-  }
-  return Offset(x, y);
 }

@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:metooltip/metooltip.dart';
-import 'package:metooltip/tooltipBase.dart';
-import 'package:metooltip/types.dart';
-
 import 'tooltipDefault.dart';
 
 void main() {
@@ -40,7 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            MeUiTooltip(
+            MeTooltip(
               message:
                   "This is a top tooltip,This is a top tooltip,This is a top tooltip,This is a top tooltip",
               allOffset: 50,
@@ -49,7 +46,7 @@ class _MyHomePageState extends State<MyHomePage> {
               tooltipChild: _getTooltipChild,
               triangleColor: Color.fromARGB(255, 78, 47, 31),
             ),
-            MeUiTooltip(
+            MeTooltip(
               message:
                   "This is a bottom tooltip,This is a bottom tooltip,This is a bottom tooltip,This is a bottom tooltip",
               allOffset: 0,
@@ -65,36 +62,22 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  TooltipBase _getTooltipChild(
-      {required String message,
-      required double height,
-      Color? triangleColor,
-      EdgeInsetsGeometry? padding,
-      EdgeInsetsGeometry? margin,
-      Decoration? decoration,
-      TextStyle? textStyle,
-      required Animation<double> animation,
-      required Offset target,
-      required double allOffset,
-      required PreferOrientation preferOri,
-      required OverlayEntry entry,
-      required Size targetSize,
-      required Function customDismiss}) {
+  TooltipBase _getTooltipChild(DefTooltipType p) {
     return CustomTooltip(
-      message: message,
-      height: height,
-      preferOri: preferOri,
-      allOffset: allOffset,
-      triangleColor: triangleColor,
-      padding: padding,
-      margin: margin,
-      decoration: decoration,
-      animation: animation,
-      textStyle: textStyle,
-      target: target,
-      entry: entry,
-      targetSize: targetSize,
-      customDismiss: customDismiss,
+      message: p.message,
+      height: p.height,
+      preferOri: p.preferOri,
+      allOffset: p.allOffset,
+      triangleColor: p.triangleColor,
+      padding: p.padding,
+      margin: p.margin,
+      decoration: p.decoration,
+      animation: p.animation,
+      textStyle: p.textStyle,
+      target: p.target,
+      entry: p.entry,
+      targetSize: p.targetSize,
+      customDismiss: p.customDismiss,
     );
   }
 }
@@ -166,10 +149,12 @@ class CustomTooltip extends TooltipBase {
       );
 
   @override
+  // ignore: must_call_super
   CustomPaint customTipPainter(PreferOrientation preferOri) {
     return CustomPaint(
         size: Size(15.0, 10),
-        painter: TrianglePainter(preferSite: preferOri, color: triangleColor));
+        painter:
+            DefTrianglePainter(preferSite: preferOri, color: triangleColor));
   }
 
   @override
