@@ -45,7 +45,7 @@ class DefTrianglePainter extends CustomPainter {
   PreferOrientation preferSite;
   Color? color;
 
-  DefTrianglePainter({this.preferSite = PreferOrientation.bottom, this.color});
+  DefTrianglePainter({this.preferSite = PreferOrientation.down, this.color});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -55,12 +55,12 @@ class DefTrianglePainter extends CustomPainter {
     paint.color = color ?? Color(0xFFFFA500);
     paint.style = PaintingStyle.fill;
     switch (preferSite) {
-      case PreferOrientation.top:
+      case PreferOrientation.up:
         path.moveTo(0.0, -1.0);
         path.lineTo(size.width / 2, -1.0);
         path.lineTo(size.width / 4, size.height / 2);
         break;
-      case PreferOrientation.bottom:
+      case PreferOrientation.down:
         path.moveTo(size.width / 4.0, size.height / 2);
         path.lineTo(0.0, size.height + 1);
         path.lineTo(size.width / 2, size.height + 1);

@@ -40,7 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
             MeTooltip(
               message: "This is a top tooltip",
               child: Text("Top tooltip"),
-              preferOri: PreferOrientation.top,
+              preferOri: PreferOrientation.up,
             ),
             MeTooltip(
               message: "This is a right tooltip",
@@ -51,7 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
             MeTooltip(
               message: "This is a bottom tooltip",
               child: Text("bottom tooltip"),
-              preferOri: PreferOrientation.bottom,
+              preferOri: PreferOrientation.down,
             ),
             MeTooltip(
               message: "This is a left tooltip",
@@ -63,7 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
               message:
                   "This is a top tooltip,This is a top tooltip,This is a top tooltip,This is a top tooltip",
               child: Text("Top tooltip"),
-              preferOri: PreferOrientation.top,
+              preferOri: PreferOrientation.up,
             ),
             MeTooltip(
               message:
@@ -76,7 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
               message:
                   "This is a bottom tooltip,This is a bottom tooltip,This is a bottom tooltip,This is a bottom tooltip",
               child: Text("bottom tooltip"),
-              preferOri: PreferOrientation.bottom,
+              preferOri: PreferOrientation.down,
             ),
             MeTooltip(
               message:

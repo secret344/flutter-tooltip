@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:metooltip/metooltip.dart';
-import 'tooltipDefault.dart';
+
+import 'defwidget.dart';
 
 void main() {
   runApp(MyApp());
@@ -14,14 +15,12 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, required this.title}) : super(key: key);
-  final String title;
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -31,50 +30,14 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            MeTooltip(
-              message:
-                  "This is a top tooltip,This is a top tooltip,This is a top tooltip,This is a top tooltipThis is a top tooltip,This is a top tooltip,This is a top tooltip,This is a top tooltipThis is a top tooltip,This is a top tooltip,This is a top tooltip,This is a top tooltipThis is a top tooltip,This is a top tooltip,This is a top tooltip,This is a top tooltipThis is a top tooltip,This is a top tooltip,This is a top tooltip,This is a top tooltipThis is a top tooltip,This is a top tooltip,This is a top tooltip,This is a top tooltipThis is a top tooltip,This is a top tooltip,This is a top tooltip",
-              allOffset: 50,
-              child: Text("custom top tooltip"),
-              height: 250,
-              preferOri: PreferOrientation.up,
-              tooltipChild: _getTooltipChild,
-              triangleColor: Color.fromARGB(255, 78, 47, 31),
-              openMouseEvent: false,
-            ),
-            MeTooltip(
-              message:
-                  "This is a bottom tooltip,This is a bottom tooltip,This is a bottom tooltip,This is a bottom tooltip",
-              allOffset: 0,
-              child: Text("custom bottom tooltip"),
-              preferOri: PreferOrientation.down,
-              tooltipChild: _getTooltipChild,
-              triangleColor: Color.fromARGB(255, 78, 47, 31),
-            ),
-            MeTooltip(
-              message:
-                  "This is a left tooltip,This is a left tooltip,This is a left tooltip,This is a left tooltip",
-              allOffset: 0,
-              child: Text("custom left tooltip, openMouseEvent:false"),
-              preferOri: PreferOrientation.left,
-              tooltipChild: _getTooltipChild,
-              triangleColor: Color.fromARGB(255, 78, 47, 31),
-              openMouseEvent: false,
-            ),
-            MeTooltip(
-              message:
-                  "This is a right tooltip,This is a right tooltip,This is a right tooltip,This is a right tooltip",
-              allOffset: 0,
-              child: Text("custom right tooltip, openMouseEvent:false"),
-              preferOri: PreferOrientation.right,
-              tooltipChild: _getTooltipChild,
-              triangleColor: Color.fromARGB(255, 78, 47, 31),
-              openMouseEvent: false,
-            )
-          ],
+        child: MeTooltip(
+          message:
+              "This is a bottom tooltip,This is a bottom tooltip,This is a bottom tooltip,This is a bottom tooltip",
+          allOffset: 0,
+          child: Text("custom bottom tooltip"),
+          preferOri: PreferOrientation.down,
+          tooltipChild: _getTooltipChild,
+          triangleColor: Color.fromARGB(255, 78, 47, 31),
         ),
       ),
     );
@@ -148,13 +111,14 @@ class CustomTooltip extends TooltipBase {
             customDismiss: customDismiss);
 
   @override
-  Widget getDefaultComputed(Animation<double>? animation) => myTooltipDefault(
+  Widget getDefaultComputed(Animation<double>? animation) => MyTooltipDefault(
         message: message,
         height: height,
         padding: padding,
         margin: margin,
         decoration: decoration,
         textStyle: textStyle,
+        animation: animation!,
       );
 
   @override
@@ -169,5 +133,10 @@ class CustomTooltip extends TooltipBase {
   void clickTooltip(customDismiss) {
     print("消失");
     customDismiss();
+  }
+
+  @override
+  Widget getCustomAnimation({required Animation<double> animation}) {
+    return getDefaultTooltip(preferOri, animation);
   }
 }

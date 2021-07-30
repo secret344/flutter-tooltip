@@ -15,7 +15,7 @@ GlobalKey<_MeTooltipState> meUiTooltipKey = GlobalKey();
 /// If you do not understand the meaning of these parameters, please try it yourself, or see the example.
 /// Basic api
 /// Usage examples:
-/// MeUiTooltip(
+/// MeTooltip(
 ///   message: "This is a right tooltip",
 ///   child: Text("right tooltip"),
 ///   allOffset: 50,
@@ -176,7 +176,7 @@ class _MeTooltipState extends State<MeTooltip>
   @override
   Widget build(BuildContext context) {
     verticalOffset = widget.allOffset ?? _defaultVerticalOffset;
-    preferLMR = widget.preferOri ?? PreferOrientation.top;
+    preferLMR = widget.preferOri ?? PreferOrientation.up;
     height = widget.height ?? _getDefaultTooltipHeight();
     margin = widget.margin ?? _defaultMargin;
     padding = widget.padding ?? _getDefaultPadding();
@@ -478,16 +478,7 @@ class _DefTooltipBase extends TooltipBase {
             customDismiss: customDismiss);
 
   @override
-  Widget getDefaultComputed({
-    required PreferOrientation preferOri,
-    required String message,
-    required double height,
-    Decoration? decoration,
-    EdgeInsetsGeometry? padding,
-    EdgeInsetsGeometry? margin,
-    TextStyle? textStyle,
-  }) =>
-      TooltipDefault(
+  Widget getDefaultComputed(Animation<double>? animation) => TooltipDefault(
         message: message,
         height: height,
         padding: padding,
@@ -498,8 +489,8 @@ class _DefTooltipBase extends TooltipBase {
 
   double arrowHeight = 10;
   @override
-  CustomPaint customTipPainter(PreferOrientation preferOri) {
-    return super.customTipPainter(preferOri);
+  Widget customTipPainter() {
+    return super.customTipPainter();
   }
 
   @override
