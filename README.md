@@ -6,11 +6,11 @@ According to the case, you can customize the appearance of the tip box. Custom a
 
 ## Future
 
--   [ ] Animation Configuration
+-   [x] Animation Configuration
 -   [ ] Optimize configuration items
 -   [ ] Add Test
 
-## Example
+## Example(please be sure to review all examples when using)
 
 ```dart
 MeTooltip(
