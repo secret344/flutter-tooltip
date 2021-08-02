@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/rendering.dart';
 
-import 'builtinwidgets/defTooltipBase.dart';
+import 'builtinwidgets/defTooltipWidget.dart';
 import 'defaultWidget.dart';
 import 'tooltipBase.dart';
 import 'types.dart';
@@ -330,7 +330,7 @@ class _MeTooltipState extends State<MeTooltip>
               customDismiss: _hideTooltip))
           : Directionality(
               textDirection: Directionality.of(context),
-              child: DefTooltipBase(
+              child: DefTooltipWidget(
                   message: widget.message ?? "",
                   height: height,
                   padding: padding,

@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:flutter/widgets.dart';
 
 import 'defaultWidget.dart';
@@ -80,15 +78,8 @@ abstract class TooltipBase extends StatefulWidget with SortTooltipWidget {
 }
 
 class _TooltipBaseState extends State<TooltipBase> {
-  double arrowHeight = 10;
   @override
   Widget build(BuildContext context) {
-    double customVerticalOffset =
-        math.max(widget.allOffset - arrowHeight, arrowHeight);
-    if (widget.preferOri == PreferOrientation.down ||
-        widget.preferOri == PreferOrientation.up) {
-      customVerticalOffset = math.max(widget.allOffset, arrowHeight);
-    }
     return Positioned.fill(
         // 切断 super.hitTest
         child: IgnorePointer(
@@ -96,7 +87,7 @@ class _TooltipBaseState extends State<TooltipBase> {
             child: CustomSingleChildLayout(
                 delegate: _TooltipPositionDelegate(
                     target: widget.target,
-                    allOffset: customVerticalOffset,
+                    allOffset: widget.allOffset,
                     preferOri: widget.preferOri,
                     targetSize: widget.targetSize),
                 child: GestureDetector(
@@ -125,11 +116,13 @@ class _TooltipPositionDelegate extends SingleChildLayoutDelegate {
   BoxConstraints getConstraintsForChild(BoxConstraints constraints) =>
       constraints.loosen();
 
+  /// TODO: does it need to be configurable?
   @override
   Offset getPositionForChild(Size size, Size childSize) {
     switch (preferOri) {
       case PreferOrientation.up:
       case PreferOrientation.down:
+        // Use flutter's default calculation
         return positionDependentBox(
           size: size,
           childSize: childSize,

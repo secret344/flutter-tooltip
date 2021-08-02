@@ -93,8 +93,9 @@ abstract class SortTooltipWidget {
 
   @protected
   Widget customTipPainter();
+
   /// Handling Tooltip widget sequence.
-  /// 
+  ///
   /// You can decide whether to override as needed.
   Widget getDefaultTooltip(
       PreferOrientation preferOri, Animation<double>? animation) {

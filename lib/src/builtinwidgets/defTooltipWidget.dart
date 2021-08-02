@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 
 import '../../metooltip.dart';
 
-class DefTooltipBase extends TooltipBase {
+class DefTooltipWidget extends TooltipBase {
   final String message;
   final double height;
   final EdgeInsetsGeometry? padding;
@@ -18,7 +18,7 @@ class DefTooltipBase extends TooltipBase {
   final Function customDismiss;
   final Color? triangleColor;
   final bool ignorePointer;
-  DefTooltipBase(
+  DefTooltipWidget(
       {Key? key,
       required this.message,
       required this.height,

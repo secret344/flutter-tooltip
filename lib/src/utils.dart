@@ -9,7 +9,7 @@ Offset customHorizontalPositionDependentBox({
   required Size childSize, // 子组件的大小
   required Offset target, // 目标节点中心偏移坐标
   required PreferOrientation preferOri, // 方向
-  double horizontalOffset = 0.0, // 自定义水平偏移量
+  double horizontalOffset = 0.0, // 水平偏移量
   double margin = 10.0, // 边距
 }) {
   final bool fitsRight =
