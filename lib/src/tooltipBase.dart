@@ -6,6 +6,10 @@ import 'defaultWidget.dart';
 import 'types.dart';
 import 'utils.dart';
 
+/// If you need to customize Tooltip,
+/// use the tooltipChild parameter with the value of a class that inherits from TooltipBase (configure it according to your needs).
+///
+/// Reference example: example/example-2 ; example/example-3
 abstract class TooltipBase extends StatefulWidget with SortTooltipWidget {
   final String message;
   final double height;
@@ -45,12 +49,14 @@ abstract class TooltipBase extends StatefulWidget with SortTooltipWidget {
   @override
   _TooltipBaseState createState() => _TooltipBaseState();
 
-  /// 你可以根据preferOri参数返回合适的Widget
+  /// 你可以根据preferOri参数返回合适的Widget.
+  ///
   /// You can return the appropriate widget based on the preferOri parameter
   @protected
   Widget getDefaultComputed(Animation<double>? animation);
 
   /// Custom tooltip edge widgets.
+  ///
   /// eg：The default triangle around the edge of the tooltip.
   Widget customTipPainter() {
     return CustomPaint(
@@ -67,6 +73,7 @@ abstract class TooltipBase extends StatefulWidget with SortTooltipWidget {
   Widget getCustomAnimation({required Animation<double> animation}) {
     return FadeTransition(
       opacity: animation,
+      // This will call getDefaultComputed and pass animation as an argument.
       child: getDefaultTooltip(preferOri, animation),
     );
   }

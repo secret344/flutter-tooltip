@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/rendering.dart';
 
+import 'builtinwidgets/defTooltipBase.dart';
 import 'defaultWidget.dart';
 import 'tooltipBase.dart';
 import 'types.dart';
@@ -13,6 +14,7 @@ import 'types.dart';
 GlobalKey<_MeTooltipState> meUiTooltipKey = GlobalKey();
 
 /// If you do not understand the meaning of these parameters, please try it yourself, or see the example.
+/// 
 /// Basic api
 /// Usage examples:
 /// MeTooltip(
@@ -328,7 +330,7 @@ class _MeTooltipState extends State<MeTooltip>
               customDismiss: _hideTooltip))
           : Directionality(
               textDirection: Directionality.of(context),
-              child: _DefTooltipBase(
+              child: DefTooltipBase(
                   message: widget.message ?? "",
                   height: height,
                   padding: padding,
@@ -424,77 +426,4 @@ class _MeTooltipState extends State<MeTooltip>
   }
 }
 
-// ignore: must_be_immutable
-class _DefTooltipBase extends TooltipBase {
-  final String message;
-  final double height;
-  final EdgeInsetsGeometry? padding;
-  final EdgeInsetsGeometry? margin;
-  final Decoration? decoration;
-  final TextStyle? textStyle;
-  final Animation<double> animation;
-  final Offset target;
-  final double allOffset;
-  final PreferOrientation preferOri;
-  final OverlayEntry entry;
-  final Size targetSize;
-  final Function customDismiss;
-  final Color? triangleColor;
-  final bool ignorePointer;
-  _DefTooltipBase(
-      {Key? key,
-      required this.message,
-      required this.height,
-      this.triangleColor,
-      this.padding,
-      bool? ignorePointer,
-      this.margin,
-      this.decoration,
-      this.textStyle,
-      required this.animation,
-      required this.target,
-      required this.allOffset,
-      required this.preferOri,
-      required this.entry,
-      required this.targetSize,
-      required this.customDismiss})
-      : ignorePointer = ignorePointer ?? false,
-        super(
-            key: key,
-            message: message,
-            height: height,
-            triangleColor: triangleColor,
-            padding: padding,
-            margin: margin,
-            decoration: decoration,
-            textStyle: textStyle,
-            target: target,
-            ignorePointer: ignorePointer,
-            allOffset: allOffset,
-            preferOri: preferOri,
-            entry: entry,
-            targetSize: targetSize,
-            animation: animation,
-            customDismiss: customDismiss);
 
-  @override
-  Widget getDefaultComputed(Animation<double>? animation) => TooltipDefault(
-        message: message,
-        height: height,
-        padding: padding,
-        margin: margin,
-        decoration: decoration,
-        textStyle: textStyle,
-      );
-
-  double arrowHeight = 10;
-  @override
-  Widget customTipPainter() {
-    return super.customTipPainter();
-  }
-
-  @override
-  void clickTooltip(customDismiss) {
-    customDismiss();
-  }
-}

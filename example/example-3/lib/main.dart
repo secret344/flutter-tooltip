@@ -139,4 +139,10 @@ class CustomTooltip extends TooltipBase {
   Widget getCustomAnimation({required Animation<double> animation}) {
     return getDefaultTooltip(preferOri, animation);
   }
+
+  @override
+  Widget getDefaultTooltip(
+      PreferOrientation preferOri, Animation<double>? animation) {
+    return Text("123");
+  }
 }
