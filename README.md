@@ -4,6 +4,33 @@ Reference flutter native Tooltip to implement a configurable Tooltip, as a proje
 
 According to the case, you can customize the appearance of the tip box. Custom animations will be supported in the future.
 
+## installing
+
+With Dart:
+
+```
+dart pub add metooltip
+```
+
+With Flutter:
+
+```
+flutter pub add metooltip
+```
+
+pubspec.yaml :
+
+```
+dependencies:
+  metooltip: <latest_version>
+```
+
+### Import it
+
+```dart
+import 'package:metooltip/metooltip.dart';
+```
+
 ## Future
 
 -   [x] Animation Configuration
