@@ -36,21 +36,20 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             MeTooltip(
               message:
-                  "This is a top tooltip,This is a top tooltip,This is a top tooltip,This is a top tooltipThis is a top tooltip,This is a top tooltip,This is a top tooltip,This is a top tooltipThis is a top tooltip,This is a top tooltip,This is a top tooltip,This is a top tooltipThis is a top tooltip,This is a top tooltip,This is a top tooltip,This is a top tooltipThis is a top tooltip,This is a top tooltip,This is a top tooltip,This is a top tooltipThis is a top tooltip,This is a top tooltip,This is a top tooltip,This is a top tooltipThis is a top tooltip,This is a top tooltip,This is a top tooltip",
-              allOffset: 50,
+                  "This is a top tooltip,This is a top tooltip,This is a top tooltip,This is a top tooltipThis is a top tooltip,This is a top tooltip,This is a top tooltip,This is a top tooltipThis is a top tooltip",
+              allOffset: 0,
+              height: 100,
               child: Text("custom top tooltip"),
-              height: 250,
-              preferOri: PreferOrientation.top,
+              preferOri: PreferOrientation.up,
               tooltipChild: _getTooltipChild,
               triangleColor: Color.fromARGB(255, 78, 47, 31),
-              openMouseEvent: false,
             ),
             MeTooltip(
               message:
                   "This is a bottom tooltip,This is a bottom tooltip,This is a bottom tooltip,This is a bottom tooltip",
               allOffset: 0,
               child: Text("custom bottom tooltip"),
-              preferOri: PreferOrientation.bottom,
+              preferOri: PreferOrientation.down,
               tooltipChild: _getTooltipChild,
               triangleColor: Color.fromARGB(255, 78, 47, 31),
             ),
@@ -148,16 +147,7 @@ class CustomTooltip extends TooltipBase {
             customDismiss: customDismiss);
 
   @override
-  Widget getDefaultComputed({
-    required PreferOrientation preferOri,
-    required String message,
-    required double height,
-    Decoration? decoration,
-    EdgeInsetsGeometry? padding,
-    EdgeInsetsGeometry? margin,
-    TextStyle? textStyle,
-  }) =>
-      myTooltipDefault(
+  Widget getDefaultComputed(Animation<double>? animation) => myTooltipDefault(
         message: message,
         height: height,
         padding: padding,
@@ -167,8 +157,7 @@ class CustomTooltip extends TooltipBase {
       );
 
   @override
-  // ignore: must_call_super
-  CustomPaint customTipPainter(PreferOrientation preferOri) {
+  Widget customTipPainter() {
     return CustomPaint(
         size: Size(15.0, 10),
         painter:

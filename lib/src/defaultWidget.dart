@@ -45,7 +45,7 @@ class DefTrianglePainter extends CustomPainter {
   PreferOrientation preferSite;
   Color? color;
 
-  DefTrianglePainter({this.preferSite = PreferOrientation.bottom, this.color});
+  DefTrianglePainter({this.preferSite = PreferOrientation.down, this.color});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -55,12 +55,12 @@ class DefTrianglePainter extends CustomPainter {
     paint.color = color ?? Color(0xFFFFA500);
     paint.style = PaintingStyle.fill;
     switch (preferSite) {
-      case PreferOrientation.top:
+      case PreferOrientation.up:
         path.moveTo(0.0, -1.0);
         path.lineTo(size.width / 2, -1.0);
         path.lineTo(size.width / 4, size.height / 2);
         break;
-      case PreferOrientation.bottom:
+      case PreferOrientation.down:
         path.moveTo(size.width / 4.0, size.height / 2);
         path.lineTo(0.0, size.height + 1);
         path.lineTo(size.width / 2, size.height + 1);
@@ -84,5 +84,57 @@ class DefTrianglePainter extends CustomPainter {
   @override
   bool shouldRepaint(CustomPainter customPainter) {
     return true;
+  }
+}
+
+abstract class SortTooltipWidget {
+  @protected
+  Widget getDefaultComputed(Animation<double>? animation);
+
+  @protected
+  Widget customTipPainter();
+
+  /// Handling Tooltip widget sequence.
+  ///
+  /// You can decide whether to override as needed.
+  Widget getDefaultTooltip(
+      PreferOrientation preferOri, Animation<double>? animation) {
+    Widget defComputed = getDefaultComputed(animation);
+    Widget result;
+    Widget tipPainter = customTipPainter();
+
+    /// CustomSingleChildLayout可以获取父组件和子组件的布局区域。并可以对子组件进行盒约束及偏移定位。一句话来说用于排布一个组件
+    switch (preferOri) {
+      case PreferOrientation.right:
+        result = Row(mainAxisSize: MainAxisSize.min, children: [
+          tipPainter,
+          Flexible(
+            fit: FlexFit.loose,
+            child: defComputed,
+          )
+        ]);
+        break;
+      case PreferOrientation.left:
+        result = Row(mainAxisSize: MainAxisSize.min, children: [
+          Flexible(
+            fit: FlexFit.loose,
+            child: defComputed,
+          ),
+          tipPainter,
+        ]);
+        break;
+      case PreferOrientation.down:
+        result = Column(mainAxisSize: MainAxisSize.min, children: [
+          tipPainter,
+          defComputed,
+        ]);
+        break;
+      default:
+        result = Column(mainAxisSize: MainAxisSize.min, children: [
+          defComputed,
+          tipPainter,
+        ]);
+    }
+    return result;
   }
 }

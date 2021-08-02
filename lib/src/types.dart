@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-enum PreferOrientation { left, right, top, bottom }
+enum PreferOrientation { left, right, up, down }
 
 class DefTooltipType {
   final String message;
@@ -37,3 +37,23 @@ class DefTooltipType {
       required this.customDismiss})
       : ignorePointer = ignorePointer ?? false;
 }
+
+class DefaultTooltipType {
+  final String message;
+  final EdgeInsetsGeometry? padding;
+  final EdgeInsetsGeometry? margin;
+  final Decoration? decoration;
+  final TextStyle? textStyle;
+  final double height;
+  final PreferOrientation preferOri;
+  const DefaultTooltipType(
+      {Key? key,
+      required this.message,
+      required this.height,
+      required this.preferOri,
+      this.padding,
+      this.margin,
+      this.decoration,
+      this.textStyle});
+}
+

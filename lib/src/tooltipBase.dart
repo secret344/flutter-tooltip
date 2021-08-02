@@ -1,12 +1,14 @@
-import 'dart:math' as math;
-
 import 'package:flutter/widgets.dart';
 
 import 'defaultWidget.dart';
 import 'types.dart';
 import 'utils.dart';
 
-abstract class TooltipBase extends StatefulWidget {
+/// If you need to customize Tooltip,
+/// use the tooltipChild parameter with the value of a class that inherits from TooltipBase (configure it according to your needs).
+///
+/// Reference example: example/example-2 ; example/example-3
+abstract class TooltipBase extends StatefulWidget with SortTooltipWidget {
   final String message;
   final double height;
   final EdgeInsetsGeometry? padding;
@@ -45,23 +47,16 @@ abstract class TooltipBase extends StatefulWidget {
   @override
   _TooltipBaseState createState() => _TooltipBaseState();
 
-  /// 你可以根据preferOri参数返回合适的Widget
+  /// 你可以根据preferOri参数返回合适的Widget.
+  ///
   /// You can return the appropriate widget based on the preferOri parameter
   @protected
-  Widget getDefaultComputed({
-    required PreferOrientation preferOri,
-    required String message,
-    required double height,
-    Decoration? decoration,
-    EdgeInsetsGeometry? padding,
-    EdgeInsetsGeometry? margin,
-    TextStyle? textStyle,
-  });
+  Widget getDefaultComputed(Animation<double>? animation);
 
   /// Custom tooltip edge widgets.
+  ///
   /// eg：The default triangle around the edge of the tooltip.
-  @mustCallSuper
-  CustomPaint customTipPainter(PreferOrientation preferOri) {
+  Widget customTipPainter() {
     return CustomPaint(
         size: Size(15.0, 10),
         painter:
@@ -71,61 +66,20 @@ abstract class TooltipBase extends StatefulWidget {
   /// Click on the tooltip event
   @protected
   void clickTooltip(Function customDismiss);
+
+  /// Customized transition animation
+  Widget getCustomAnimation({required Animation<double> animation}) {
+    return FadeTransition(
+      opacity: animation,
+      // This will call getDefaultComputed and pass animation as an argument.
+      child: getDefaultTooltip(preferOri, animation),
+    );
+  }
 }
 
 class _TooltipBaseState extends State<TooltipBase> {
-  double arrowHeight = 10;
   @override
   Widget build(BuildContext context) {
-    double customVerticalOffset =
-        math.max(widget.allOffset - arrowHeight, arrowHeight);
-    Widget defComputed = widget.getDefaultComputed(
-      preferOri: widget.preferOri,
-      message: widget.message,
-      height: widget.height,
-      padding: widget.padding,
-      margin: widget.margin,
-      decoration: widget.decoration,
-      textStyle: widget.textStyle,
-    );
-    Widget result;
-    Widget tipPainter = widget.customTipPainter(widget.preferOri);
-
-    /// CustomSingleChildLayout可以获取父组件和子组件的布局区域。并可以对子组件进行盒约束及偏移定位。一句话来说用于排布一个组件
-    switch (widget.preferOri) {
-      case PreferOrientation.right:
-        result = Row(mainAxisSize: MainAxisSize.min, children: [
-          tipPainter,
-          Flexible(
-            fit: FlexFit.loose,
-            child: defComputed,
-          )
-        ]);
-        break;
-      case PreferOrientation.left:
-        result = Row(mainAxisSize: MainAxisSize.min, children: [
-          Flexible(
-            fit: FlexFit.loose,
-            child: defComputed,
-          ),
-          tipPainter,
-        ]);
-        break;
-      case PreferOrientation.bottom:
-        customVerticalOffset = math.max(widget.allOffset, arrowHeight);
-        result = Column(mainAxisSize: MainAxisSize.min, children: [
-          tipPainter,
-          defComputed,
-        ]);
-        break;
-      default:
-        customVerticalOffset = math.max(widget.allOffset, arrowHeight);
-        result = Column(mainAxisSize: MainAxisSize.min, children: [
-          defComputed,
-          tipPainter,
-        ]);
-    }
-
     return Positioned.fill(
         // 切断 super.hitTest
         child: IgnorePointer(
@@ -133,7 +87,7 @@ class _TooltipBaseState extends State<TooltipBase> {
             child: CustomSingleChildLayout(
                 delegate: _TooltipPositionDelegate(
                     target: widget.target,
-                    allOffset: customVerticalOffset,
+                    allOffset: widget.allOffset,
                     preferOri: widget.preferOri,
                     targetSize: widget.targetSize),
                 child: GestureDetector(
@@ -141,10 +95,7 @@ class _TooltipBaseState extends State<TooltipBase> {
                   onTap: () {
                     widget.clickTooltip(widget.customDismiss);
                   },
-                  child: FadeTransition(
-                    opacity: widget.animation,
-                    child: result,
-                  ),
+                  child: widget.getCustomAnimation(animation: widget.animation),
                 ))));
   }
 }
@@ -158,27 +109,26 @@ class _TooltipPositionDelegate extends SingleChildLayoutDelegate {
       {required this.target,
       required this.allOffset,
       required this.preferOri,
-      required this.targetSize})
-      : assert(target != null),
-        assert(allOffset != null),
-        assert(preferOri != null);
+      required this.targetSize});
 
   /// 约束限制子控件大小
   @override
   BoxConstraints getConstraintsForChild(BoxConstraints constraints) =>
       constraints.loosen();
 
+  /// TODO: does it need to be configurable?
   @override
   Offset getPositionForChild(Size size, Size childSize) {
     switch (preferOri) {
-      case PreferOrientation.top:
-      case PreferOrientation.bottom:
+      case PreferOrientation.up:
+      case PreferOrientation.down:
+        // Use flutter's default calculation
         return positionDependentBox(
           size: size,
           childSize: childSize,
           target: target,
           verticalOffset: allOffset,
-          preferBelow: preferOri == PreferOrientation.bottom ? true : false,
+          preferBelow: preferOri == PreferOrientation.down ? true : false,
         );
       default:
         return customHorizontalPositionDependentBox(

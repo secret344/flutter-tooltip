@@ -6,11 +6,11 @@ According to the case, you can customize the appearance of the tip box. Custom a
 
 ## Future
 
--   [ ] Animation Configuration
+-   [x] Animation Configuration
 -   [ ] Optimize configuration items
 -   [ ] Add Test
 
-## Example
+## Example(please be sure to review all examples when using)
 
 ```dart
 MeTooltip(
@@ -23,11 +23,16 @@ MeTooltip(
 
 -   [example1](./example/example-1/)
 
-    ![](https://github.com/secret344/flutter-tooltip/blob/main/screenshots/example-1-1.png)
+    <img width="500px" height="500px" src="https://github.com/secret344/flutter-tooltip/blob/main/screenshots/example-1-1.png"/>
 
 -   [example2](./example/example-2/)
 
-    ![](https://github.com/secret344/flutter-tooltip/blob/main/screenshots/example-2.png)
+    <img width="500px" height="500px" src="https://github.com/secret344/flutter-tooltip/blob/main/screenshots/example-2.png"/>
+    <img width="500px" height="500px" src="https://github.com/secret344/flutter-tooltip/blob/main/screenshots/example-2.gif"/>
+
+-   [example3](./example/example-3/)
+
+    <img width="500px" height="500px" src="https://github.com/secret344/flutter-tooltip/blob/main/screenshots/example-3.gif"/>
 
 ## Getting Started
 
