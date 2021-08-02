@@ -16,6 +16,7 @@ GlobalKey<_MeTooltipState> meUiTooltipKey = GlobalKey();
 ///
 /// Basic api
 /// Usage examples:
+///
 /// MeTooltip(
 ///   message: "This is a right tooltip",
 ///   child: Text("right tooltip"),
