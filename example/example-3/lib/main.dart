@@ -34,7 +34,7 @@ class _MyHomePageState extends State<MyHomePage> {
           message:
               "This is a bottom tooltip,This is a bottom tooltip,This is a bottom tooltip,This is a bottom tooltip",
           allOffset: 0,
-          child: Text("custom bottom tooltip"),
+          child: Text("custom bottom tooltip1"),
           preferOri: PreferOrientation.down,
           tooltipChild: _getTooltipChild,
           triangleColor: Color.fromARGB(255, 78, 47, 31),
@@ -137,12 +137,32 @@ class CustomTooltip extends TooltipBase {
 
   @override
   Widget getCustomAnimation({required Animation<double> animation}) {
-    return getDefaultTooltip(preferOri, animation);
+    return FadeTransition(
+      opacity: animation,
+      // This will call getDefaultComputed and pass animation as an argument.
+      child: getDefaultTooltip(preferOri, animation),
+    );
   }
 
   @override
   Widget getDefaultTooltip(
       PreferOrientation preferOri, Animation<double>? animation) {
-    return Text("123");
+    Widget defComputed = getDefaultComputed(animation);
+    Widget result;
+    Widget tipPainter = customTipPainter();
+
+    /// CustomSingleChildLayout可以获取父组件和子组件的布局区域。并可以对子组件进行盒约束及偏移定位。一句话来说用于排布一个组件
+    switch (preferOri) {
+      case PreferOrientation.down:
+        return Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              tipPainter,
+              defComputed,
+            ]);
+      default:
+        return super.getDefaultTooltip(preferOri, animation);
+    }
   }
 }

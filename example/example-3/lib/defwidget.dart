@@ -20,7 +20,7 @@ class MyTooltipDefault extends AnimatedWidget {
       this.textStyle})
       : super(key: key, listenable: animation);
   static final _opacityTween = Tween<double>(begin: 0.1, end: 1);
-  static final _sizeTween = Tween<double>(begin: 0, end: 300);
+  static final _sizeTween = Tween<double>(begin: 0, end: 285);
   @override
   Widget build(BuildContext context) {
     return ConstrainedBox(
@@ -31,28 +31,30 @@ class MyTooltipDefault extends AnimatedWidget {
                 height: _sizeTween.evaluate(animation),
                 width: _sizeTween.evaluate(animation),
                 margin: EdgeInsets.all(0),
-                color: Colors.blue,
-                child: Stack(
-                  fit: StackFit.loose,
-                  children: [
-                    Image(
-                      image: AssetImage("images/images.jpg"),
-                      width: 300,
-                    ),
-                    Container(
-                        width: 300,
-                        padding: padding,
-                        margin: margin,
-                        decoration: decoration,
-                        child: Center(
-                          widthFactor: 1.0,
-                          heightFactor: 1.0,
-                          child: Text(
-                            message,
-                            style: textStyle,
-                          ),
-                        ))
-                  ],
+                color: Colors.transparent,
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: Stack(
+                    fit: StackFit.loose,
+                    children: [
+                      Image(
+                        image: AssetImage("images/images.jpg"),
+                        width: 150,
+                      ),
+                      Container(
+                          width: 150,
+                          padding: padding,
+                          margin: margin,
+                          child: Center(
+                            widthFactor: 1.0,
+                            heightFactor: 1.0,
+                            child: Text(
+                              message,
+                              style: textStyle,
+                            ),
+                          ))
+                    ],
+                  ),
                 ))));
   }
 }

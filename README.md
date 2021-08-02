@@ -23,11 +23,16 @@ MeTooltip(
 
 -   [example1](./example/example-1/)
 
-    ![](https://github.com/secret344/flutter-tooltip/blob/main/screenshots/example-1-1.png)
+    ![<image width=300 height=300 src="https://github.com/secret344/flutter-tooltip/blob/dev/screenshots/example-1-1.png"/>](https://github.com/secret344/flutter-tooltip/blob/dev/screenshots/example-1-1.png)
 
 -   [example2](./example/example-2/)
 
-    ![](https://github.com/secret344/flutter-tooltip/blob/main/screenshots/example-2.png)
+    ![<image width=300 height=300 src="https://github.com/secret344/flutter-tooltip/blob/dev/screenshots/example-2.png"/>](https://github.com/secret344/flutter-tooltip/blob/dev/screenshots/example-2.png)
+    ![<image width=300 height=300 src="https://github.com/secret344/flutter-tooltip/blob/dev/screenshots/example-2.gif"/>](https://github.com/secret344/flutter-tooltip/blob/dev/screenshots/example-2.gif)
+
+-   [example3](./example/example-3/)
+
+    ![<image width=300 height=300 src="https://github.com/secret344/flutter-tooltip/blob/dev/screenshots/example-3.gif"/>](https://github.com/secret344/flutter-tooltip/blob/dev/screenshots/example-3.gif)
 
 ## Getting Started
 

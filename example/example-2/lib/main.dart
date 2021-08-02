@@ -36,14 +36,13 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             MeTooltip(
               message:
-                  "This is a top tooltip,This is a top tooltip,This is a top tooltip,This is a top tooltipThis is a top tooltip,This is a top tooltip,This is a top tooltip,This is a top tooltipThis is a top tooltip,This is a top tooltip,This is a top tooltip,This is a top tooltipThis is a top tooltip,This is a top tooltip,This is a top tooltip,This is a top tooltipThis is a top tooltip,This is a top tooltip,This is a top tooltip,This is a top tooltipThis is a top tooltip,This is a top tooltip,This is a top tooltip,This is a top tooltipThis is a top tooltip,This is a top tooltip,This is a top tooltip",
-              allOffset: 50,
+                  "This is a top tooltip,This is a top tooltip,This is a top tooltip,This is a top tooltipThis is a top tooltip,This is a top tooltip,This is a top tooltip,This is a top tooltipThis is a top tooltip",
+              allOffset: 0,
+              height: 100,
               child: Text("custom top tooltip"),
-              height: 250,
               preferOri: PreferOrientation.up,
               tooltipChild: _getTooltipChild,
               triangleColor: Color.fromARGB(255, 78, 47, 31),
-              openMouseEvent: false,
             ),
             MeTooltip(
               message:

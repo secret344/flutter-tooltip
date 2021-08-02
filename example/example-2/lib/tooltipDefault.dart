@@ -24,13 +24,15 @@ class myTooltipDefault extends StatelessWidget {
       constraints: BoxConstraints(minHeight: height),
       child: Card(
           margin: EdgeInsets.all(0),
-          color: Colors.blue,
+          color: Colors.transparent,
           child: Stack(
             fit: StackFit.loose,
             children: [
               Image(
                 image: AssetImage("images/images.jpg"),
                 width: 300,
+                height: height <= 100 ? 100 : height,
+                fit: BoxFit.cover,
               ),
               Container(
                   width: 300,

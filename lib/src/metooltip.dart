@@ -14,7 +14,7 @@ import 'types.dart';
 GlobalKey<_MeTooltipState> meUiTooltipKey = GlobalKey();
 
 /// If you do not understand the meaning of these parameters, please try it yourself, or see the example.
-/// 
+///
 /// Basic api
 /// Usage examples:
 /// MeTooltip(
@@ -425,5 +425,3 @@ class _MeTooltipState extends State<MeTooltip>
     }
   }
 }
-
-
