@@ -6,7 +6,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter/rendering.dart';
 
 import 'builtinwidgets/defTooltipWidget.dart';
-import 'defaultWidget.dart';
 import 'tooltipBase.dart';
 import 'types.dart';
 

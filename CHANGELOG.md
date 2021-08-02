@@ -1,3 +1,7 @@
+## 0.0.6
+
+-   Animation Configuration
+
 ## 0.0.5
 
 -   Added animation effects consistent with the official Tooltip

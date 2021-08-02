@@ -148,7 +148,6 @@ class CustomTooltip extends TooltipBase {
   Widget getDefaultTooltip(
       PreferOrientation preferOri, Animation<double>? animation) {
     Widget defComputed = getDefaultComputed(animation);
-    Widget result;
     Widget tipPainter = customTipPainter();
 
     // You can even modify the animation here to keep it consistent
