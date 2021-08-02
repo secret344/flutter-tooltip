@@ -23,16 +23,16 @@ MeTooltip(
 
 -   [example1](./example/example-1/)
 
-    ![<img width="300px" height="300px" src="https://github.com/secret344/flutter-tooltip/blob/dev/screenshots/example-1-1.png"/>](https://github.com/secret344/flutter-tooltip/blob/dev/screenshots/example-1-1.png)
+    <img width="300px" height="300px" src="https://github.com/secret344/flutter-tooltip/blob/dev/screenshots/example-1-1.png"/>
 
 -   [example2](./example/example-2/)
 
-    ![<img width="300px" height="300px" src="https://github.com/secret344/flutter-tooltip/blob/dev/screenshots/example-2.png"/>](https://github.com/secret344/flutter-tooltip/blob/dev/screenshots/example-2.png)
-    ![<img width="300px" height="300px" src="https://github.com/secret344/flutter-tooltip/blob/dev/screenshots/example-2.gif"/>](https://github.com/secret344/flutter-tooltip/blob/dev/screenshots/example-2.gif)
+    <img width="300px" height="300px" src="https://github.com/secret344/flutter-tooltip/blob/dev/screenshots/example-2.png"/>
+    <img width="300px" height="300px" src="https://github.com/secret344/flutter-tooltip/blob/dev/screenshots/example-2.gif"/>
 
 -   [example3](./example/example-3/)
 
-    ![<img width="300px" height="300px" src="https://github.com/secret344/flutter-tooltip/blob/dev/screenshots/example-3.gif"/>](https://github.com/secret344/flutter-tooltip/blob/dev/screenshots/example-3.gif)
+    <img width="300px" height="300px" src="https://github.com/secret344/flutter-tooltip/blob/dev/screenshots/example-3.gif"/>
 
 ## Getting Started
 
