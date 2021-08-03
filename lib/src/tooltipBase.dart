@@ -47,8 +47,6 @@ abstract class TooltipBase extends StatefulWidget with SortTooltipWidget {
   @override
   _TooltipBaseState createState() => _TooltipBaseState();
 
-  /// 你可以根据preferOri参数返回合适的Widget.
-  ///
   /// You can return the appropriate widget based on the preferOri parameter
   @protected
   Widget getDefaultComputed(Animation<double>? animation);
@@ -111,7 +109,6 @@ class _TooltipPositionDelegate extends SingleChildLayoutDelegate {
       required this.preferOri,
       required this.targetSize});
 
-  /// 约束限制子控件大小
   @override
   BoxConstraints getConstraintsForChild(BoxConstraints constraints) =>
       constraints.loosen();
@@ -140,7 +137,6 @@ class _TooltipPositionDelegate extends SingleChildLayoutDelegate {
     }
   }
 
-  /// 是否需要重新布局
   @override
   bool shouldRelayout(_TooltipPositionDelegate oldDelegate) {
     return target != oldDelegate.target ||

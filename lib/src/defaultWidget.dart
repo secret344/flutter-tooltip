@@ -103,7 +103,7 @@ abstract class SortTooltipWidget {
     Widget result;
     Widget tipPainter = customTipPainter();
 
-    /// CustomSingleChildLayout可以获取父组件和子组件的布局区域。并可以对子组件进行盒约束及偏移定位。一句话来说用于排布一个组件
+    // CustomSingleChildLayout可以获取父组件和子组件的布局区域。并可以对子组件进行盒约束及偏移定位。一句话来说用于排布一个组件
     switch (preferOri) {
       case PreferOrientation.right:
         result = Row(mainAxisSize: MainAxisSize.min, children: [

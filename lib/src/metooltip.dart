@@ -24,61 +24,48 @@ GlobalKey<_MeTooltipState> meUiTooltipKey = GlobalKey();
 ///   preferOri: PreferOrientation.right,
 /// ),
 class MeTooltip extends StatefulWidget {
-  /// 提示框目标Widget
   /// Tip box target widget
   final Widget? child;
 
-  /// 自定义提示框
   /// Custom Tip Box Widget
   final TooltipBase Function(DefTooltipType)? tooltipChild;
 
-  /// 提示消息
   /// Tip Message
   final String? message;
 
-  /// 提示框偏移量
   /// Tip Box Offset
   final double? allOffset;
 
-  /// 提示位置
   /// Tip box orientation
   final PreferOrientation? preferOri;
 
-  /// 提示框高度
   /// Tip box height
   final double? height;
 
-  /// 提示框外边距
   /// Tip box outer margin
   final EdgeInsetsGeometry? margin;
 
-  /// 提示框内边距
   /// Margin inside the prompt box
   final EdgeInsetsGeometry? padding;
   final bool? excludeFromSemantics;
 
-  /// 提示文字样式
   /// Tip box text style
   final TextStyle? textStyle;
 
-  /// 提示框背景样式
   /// Tip box background style
   final BoxDecoration? decoration;
 
-  /// 提示框三角背景颜色
   /// Cue box triangle background color
   final Color? triangleColor;
 
   /// Close mouse events
   final bool openMouseEvent;
 
-  /// 等待时间
   final Duration? waitDuration;
 
-  /// 显示时间
   final Duration? showDuration;
 
-  /// 阻止提示框指针hitTest
+  /// hitTest
   final bool? ignorePointer;
   const MeTooltip(
       {Key? key,
@@ -124,8 +111,8 @@ class _MeTooltipState extends State<MeTooltip>
   late bool excludeFromSemantics;
   late bool _mouseIsConnected;
   OverlayEntry? _entry;
-  Timer? _hideTimer; // 长按时小时延续时间
-  Timer? _showTimer; // 动画时间
+  Timer? _hideTimer;
+  Timer? _showTimer;
   late Duration showDuration;
   late Duration waitDuration;
   late AnimationController _controller;
@@ -137,12 +124,10 @@ class _MeTooltipState extends State<MeTooltip>
     _mouseIsConnected = RendererBinding.instance!.mouseTracker.mouseIsConnected;
     // 默认动画
     _controller = AnimationController(
-      duration: _fadeInDuration, // 动画持续时间
-      reverseDuration: _fadeOutDuration, // 反向动画持续时间
-      vsync: this, // 帧触发时收到通  ticker
-    )
-      // 监听动画状态改变
-      ..addStatusListener(_handleStatusChanged);
+      duration: _fadeInDuration,
+      reverseDuration: _fadeOutDuration,
+      vsync: this, // ticker
+    )..addStatusListener(_handleStatusChanged);
 
     /**
      * RendererBinding 是渲染树和Flutter引擎的胶水层
@@ -274,7 +259,6 @@ class _MeTooltipState extends State<MeTooltip>
     _longPressActivated = false;
   }
 
-  /// 清除Tooltip实体 包括动画
   void _removeEntry() {
     _hideTimer?.cancel();
     _hideTimer = null;
@@ -355,7 +339,6 @@ class _MeTooltipState extends State<MeTooltip>
     SemanticsService.tooltip(widget.message ?? "");
   }
 
-  /// 鼠标添加事件
   _handleMouseTrackerChange() {
     // [State]对象当前是否在树中。
     if (!mounted) {
@@ -370,7 +353,6 @@ class _MeTooltipState extends State<MeTooltip>
     }
   }
 
-  /// 鼠标事件
   _handlePointerEvent(PointerEvent event) {
     if (_entry == null || !widget.openMouseEvent) {
       return;

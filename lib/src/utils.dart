@@ -5,12 +5,12 @@ import 'types.dart';
 
 // Get Tooltip Horizontal Offset
 Offset customHorizontalPositionDependentBox({
-  required Size size, // 父组件的大小
-  required Size childSize, // 子组件的大小
-  required Offset target, // 目标节点中心偏移坐标
-  required PreferOrientation preferOri, // 方向
-  double horizontalOffset = 0.0, // 水平偏移量
-  double margin = 10.0, // 边距
+  required Size size,
+  required Size childSize,
+  required Offset target,
+  required PreferOrientation preferOri,
+  double horizontalOffset = 0.0,
+  double margin = 10.0,
 }) {
   final bool fitsRight =
       target.dx + horizontalOffset + childSize.width <= size.width - margin;
